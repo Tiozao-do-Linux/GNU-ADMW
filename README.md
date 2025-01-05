@@ -58,3 +58,15 @@ python test-config-env.py
 ```sh
 python test-active-directory.py
 ```
+
+### Start application
+```sh
+
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py createsuperuser
+
+python manage.py runserver
+
+```
