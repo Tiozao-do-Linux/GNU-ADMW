@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block title %}
+	Title of About Page
+{% endblock %}
+
+{% block content %}
+	<h1>About page</h1>
+	<p>This is an About page with a logo below</p>
+{% endblock %}
+
+{% block bootstrap %}
+<div class="p-3 mb-2 bg-warning text-black">If you are seeing a orange box with white letters, our bootstrap configuration is working.</div>
+
+<button type="button" class="btn btn-primary">Primary</button>
+<button type="button" class="btn btn-secondary">Secondary</button>
+<button type="button" class="btn btn-success">Success</button>
+<button type="button" class="btn btn-danger">Danger</button>
+<button type="button" class="btn btn-warning">Warning</button>
+<button type="button" class="btn btn-info">Info</button>
+<button type="button" class="btn btn-light">Light</button>
+<button type="button" class="btn btn-dark">Dark</button>
+
+<button type="button" class="btn btn-link">Link</button>
+{% endblock %}
+
+{% block logo %}
+<div class="text-center">
+    <img src="{% static "img/active-directory.png" %}" class="rounded" alt="Logo" >
+</div>
+{% endblock %}
