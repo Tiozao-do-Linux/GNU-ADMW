@@ -1,10 +1,12 @@
 {% extends 'layout.html' %}
+{% load i18n %}
 
-{% block title %}
-	Title of Initial Page
+{% block subtitle %}
+	- {% translate 'Title of Initial Page' %}
 {% endblock %}
 
 {% block content %}
-	<h1>Initial page</h1>
-	<p>This is a Inicial page</p>
+	<h1>{% translate 'Title of Initial Page' %}</h1>
 {% endblock %}
+
+

@@ -1,0 +1,43 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-07 16:47-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/about.html:6 templates/about.html:10
+msgid "Title of About Page"
+msgstr ""
+
+#: templates/about.html:18
+msgid ""
+"you are seeing a orange box with white letters, our bootstrap configuration "
+"is working"
+msgstr ""
+
+#: templates/home.html:5 templates/home.html:9
+msgid "Title of Initial Page"
+msgstr ""
+
+#: templates/layout.html:6
+msgid "Active Directory Management Web"
+msgstr ""
+
+#: templates/layout.html:28
+msgid ""
+"If you are seeing a green box with white letters, our bootstrap "
+"configuration is working"
+msgstr ""

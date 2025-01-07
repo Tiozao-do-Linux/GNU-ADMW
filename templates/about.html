@@ -1,18 +1,21 @@
 {% extends 'layout.html' %}
-
 {% load static %}
+{% load i18n %}
 
-{% block title %}
-	Title of About Page
+{% block subtitle %}
+	- {% translate 'Title of About Page' %}
 {% endblock %}
 
 {% block content %}
-	<h1>About page</h1>
-	<p>This is an About page with a logo below</p>
+	<h1>{% translate 'Title of About Page' %}</h1>
+	{% get_current_language as LANGUAGE_CODE %}
+	{% get_available_languages as LANGUAGES %}
+	<h2>Available languages: {{ LANGUAGES }}</h2>
+	<h2>Current language: {{ LANGUAGE_CODE }}</h2>
 {% endblock %}
 
 {% block bootstrap %}
-<div class="p-3 mb-2 bg-warning text-black">If you are seeing a orange box with white letters, our bootstrap configuration is working.</div>
+<div class="p-3 mb-2 bg-warning text-black">{%translate 'you are seeing a orange box with white letters, our bootstrap configuration is working' %}</div>
 
 <button type="button" class="btn btn-primary">Primary</button>
 <button type="button" class="btn btn-secondary">Secondary</button>
@@ -30,4 +33,8 @@
 <div class="text-center">
     <img src="{% static "img/active-directory.png" %}" class="rounded" alt="Logo" >
 </div>
+{% endblock %}
+
+{% block variable %}
+	<h3>Hello {{ firstname }}, how are you?</h3>
 {% endblock %}

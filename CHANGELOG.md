@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.1] - 2025-01-03
+## [0.0.3] - 2025-01-07
 
 ### Added/Changed/Removed
-- Project start.
-- Add Directories created.
-- Add Two scripts that assist in testing the configuration and connection to Active Directory provided.
+- Add template menu.html
+- Change templates layout.html, home.html, about.html
+- Add locale settings config (settings.py, views.py, urls.py )
 
 ## [0.0.2] - 2025-01-05
 
@@ -27,3 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change template index.html to home.html
 - Removed template menu.html
 
+## [0.0.1] - 2025-01-03
+
+### Added/Changed/Removed
+- Project start.
+- Add Directories created.
+- Add Two scripts that assist in testing the configuration and connection to Active Directory provided.
