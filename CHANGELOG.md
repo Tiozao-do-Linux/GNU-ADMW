@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.3] - 2025-01-07
+## [0.0.5] - 2025-01-22
+
+### Added/Changed/Removed
+- Change "myapp" folder to "directory"
+
+## [0.0.4] - 2025-01-07
 
 ### Added/Changed/Removed
 - Enable DEBUG in .env
