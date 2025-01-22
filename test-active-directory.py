@@ -1,7 +1,12 @@
 # Install with 'pip install ms_active_directory'
 from ms_active_directory import ADDomain
 
+from dotenv import load_dotenv
+load_dotenv()  # take environment variables from .env.
+
 from decouple import config,Csv
+#config.from_envvar('.env', silent=True)
+
 print(f'# Retrieve the configuration parameters:')
 AD_DOMAIN = config('AD_DOMAIN',default='yourdomain.com')
 AD_SERVER=config('AD_SERVER', default='ldaps://ip-or-dnsname')
@@ -11,7 +16,9 @@ AD_ADMIN_PASSWORD=config('AD_ADMIN_PASSWORD', default='password-of-admin')
 AD_USER_ATTRS=config('AD_USER_ATTRS', default=[], cast=Csv())
 AD_GROUP_ATTRS=config('AD_GROUP_ATTRS', default=[], cast=Csv())
 
-print(f'# Connect with AD_SERVER')
+print(f'\tAD_DOMAIN={AD_DOMAIN}\n\tAD_SERVER={AD_SERVER}\n\tAD_ADMIN_USER={AD_ADMIN_USER}\n\tAD_ADMIN_PASSWORD={AD_ADMIN_PASSWORD}\n\tAD_USER_ATTRS={AD_USER_ATTRS}\n\tAD_GROUP_ATTRS={AD_GROUP_ATTRS}')
+
+print(f'# Connect with AD_SERVER - {AD_SERVER} with {AD_ADMIN_USER} / {AD_ADMIN_PASSWORD}')
 domain = ADDomain(AD_DOMAIN, ldap_servers_or_uris=[AD_SERVER])
 session = domain.create_session_as_user(user=AD_ADMIN_USER, password=AD_ADMIN_PASSWORD)
 

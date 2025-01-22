@@ -6,14 +6,14 @@ import os
 from dotenv import load_dotenv
 load_dotenv()  # take environment variables from .env.
 
-AD_DOMAIN = os.getenv('AD_DOMAIN')
-AD_SERVER = os.getenv('AD_SERVER')
-AD_ADMIN_USER = os.getenv('AD_ADMIN_USER')
-AD_ADMIN_PASSWORD = os.getenv('AD_ADMIN_PASSWORD')
-AD_USER_ATTRS = os.getenv('AD_USER_ATTRS')
-AD_GROUP_ATTRS = os.getenv('AD_GROUP_ATTRS')
+# AD_DOMAIN = os.getenv('AD_DOMAIN')
+# AD_SERVER = os.getenv('AD_SERVER')
+# AD_ADMIN_USER = os.getenv('AD_ADMIN_USER')
+# AD_ADMIN_PASSWORD = os.getenv('AD_ADMIN_PASSWORD')
+# AD_USER_ATTRS = os.getenv('AD_USER_ATTRS')
+# AD_GROUP_ATTRS = os.getenv('AD_GROUP_ATTRS')
 
-print(f'\tAD_DOMAIN={AD_DOMAIN}\n\tAD_SERVER={AD_SERVER}\n\tAD_ADMIN_USER={AD_ADMIN_USER}\n\tAD_ADMIN_PASSWORD={AD_ADMIN_PASSWORD}\n\tAD_USER_ATTRS={AD_USER_ATTRS}\n\tAD_GROUP_ATTRS={AD_GROUP_ATTRS}')
+# print(f'\tAD_DOMAIN={AD_DOMAIN}\n\tAD_SERVER={AD_SERVER}\n\tAD_ADMIN_USER={AD_ADMIN_USER}\n\tAD_ADMIN_PASSWORD={AD_ADMIN_PASSWORD}\n\tAD_USER_ATTRS={AD_USER_ATTRS}\n\tAD_GROUP_ATTRS={AD_GROUP_ATTRS}')
 
 print(f'\n\tUsing decouple:\n\t---------------------------------------')
 # Import the config object: - https://pypi.org/project/python-decouple/
