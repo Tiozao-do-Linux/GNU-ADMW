@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.3] - 2025-01-07
 
 ### Added/Changed/Removed
+- Enable DEBUG in .env
+- Change trace in two test files
+
+## [0.0.3] - 2025-01-07
+
+### Added/Changed/Removed
 - Add template menu.html
 - Change templates layout.html, home.html, about.html
 - Add locale settings config (settings.py, views.py, urls.py )

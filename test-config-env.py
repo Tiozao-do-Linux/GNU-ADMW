@@ -18,7 +18,7 @@ print(f'\tAD_DOMAIN={AD_DOMAIN}\n\tAD_SERVER={AD_SERVER}\n\tAD_ADMIN_USER={AD_AD
 print(f'\n\tUsing decouple:\n\t---------------------------------------')
 # Import the config object: - https://pypi.org/project/python-decouple/
 
-from decouple import config,Csv
+from decouple import config, Csv
 # Retrieve the configuration parameters:
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
