@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block subtitle %}Computers{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Computers</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Operating System</th>
+                        <th>Last Logon</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for computer in computers %}
+                    <tr>
+                        <td>{{ computer.name }}</td>
+                        <td>{{ computer.operating_system|default:"Unknown" }}</td>
+                        <td>{{ computer.last_logon|default:"Never" }}</td>
+                        <td>
+                            {% if computer.enabled %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-danger">Disabled</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No computers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

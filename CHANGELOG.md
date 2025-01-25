@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed/Removed
 - Change "myapp" folder to "directory"
+- Add navbar image in template base.html
+- Create additional views for:
+    - User Management:
+        - List all users with status indicators
+        - Create new users
+        - Edit user details
+        - Reset passwords
+        - Delete users
+    - Group Management:
+        - List all groups with member counts
+        - Create new groups
+        - Edit group details
+        - Manage group membership
+        - Delete groups
+    - Computer Management:
+        - List all computers with status and OS information
+        - View computer details
+    - Additional Features:
+        - Confirmation modals for delete operations
+        - Responsive tables
+        - Clean Bootstrap-based UI
+        - Form validation
+        - Success/error messages
+        - Audit logging of operations
 
 ## [0.0.4] - 2025-01-07
 

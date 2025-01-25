@@ -2,10 +2,8 @@
 from ms_active_directory import ADDomain
 
 from dotenv import load_dotenv
-load_dotenv()  # take environment variables from .env.
-
+load_dotenv()  # take environment variables from .env
 from decouple import config,Csv
-#config.from_envvar('.env', silent=True)
 
 print(f'# Retrieve the configuration parameters:')
 AD_DOMAIN = config('AD_DOMAIN',default='yourdomain.com')

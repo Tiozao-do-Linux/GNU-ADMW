@@ -12,22 +12,31 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-#from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
+load_dotenv()   # take environment variables from .env file
+from decouple import config,Csv
+
+# Retrieve the configuration parameters:
+AD_DOMAIN = config('AD_DOMAIN',default='yourdomain.com')
+AD_SERVER = config('AD_SERVER', default='ldaps://ip-or-dnsname')
+
+AD_ADMIN_USER = config('AD_ADMIN_USER', default='admin@yourdomain.com')
+AD_ADMIN_PASSWORD = config('AD_ADMIN_PASSWORD', default='password-of-admin')
+
+AD_USER_ATTRS = config('AD_USER_ATTRS', default=[], cast=Csv())
+AD_GROUP_ATTRS = config('AD_GROUP_ATTRS', default=[], cast=Csv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h-i_=#wzcdb-d#ta3!)r=hwi+z*@g2%acpmnfcero2e#zd!4sv'
+SECRET_KEY = config('SECRET_KEY',default='your-secret-key-here')
+DEBUG = config('DEBUG',default=False, cast=bool)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -38,7 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'directory'
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'directory',
+ 
 ]
 
 MIDDLEWARE = [
@@ -57,7 +69,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,16 +128,27 @@ LANGUAGES = (
     ('en-us', 'USA English'),
 )
 
-LOCALE_PATHS = [ BASE_DIR / "locale", ]
+LOCALE_PATHS = [ BASE_DIR / 'locale', ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_DIR = [ BASE_DIR / "static", ]
-STATICFILES_DIRS = [ BASE_DIR / "static", ]
+STATIC_URL = 'static/'
+STATIC_DIR = [ BASE_DIR / 'static', ]
+STATICFILES_DIRS = [ BASE_DIR / 'static', ]
+
+# Media
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Crispy
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+#LOGIN_URL = 'login'
+#LOGIN_REDIRECT_URL = 'dashboard'
+#LOGOUT_REDIRECT_URL = 'login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

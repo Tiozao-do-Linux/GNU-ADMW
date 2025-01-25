@@ -1,40 +1,20 @@
-{% extends 'layout.html' %}
-{% load static %}
+{% extends 'base.html' %}
 {% load i18n %}
 
-{% block subtitle %}
-	- {% translate 'Title of About Page' %}
-{% endblock %}
+{% block subtitle %} - {% translate 'About Page' %}{% endblock %}
 
 {% block content %}
-	<h1>{% translate 'Title of About Page' %}</h1>
-	{% get_current_language as LANGUAGE_CODE %}
-	{% get_available_languages as LANGUAGES %}
-	<h2>Available languages: {{ LANGUAGES }}</h2>
-	<h2>Current language: {{ LANGUAGE_CODE }}</h2>
-{% endblock %}
-
-{% block bootstrap %}
-<div class="p-3 mb-2 bg-warning text-black">{%translate 'you are seeing a orange box with white letters, our bootstrap configuration is working' %}</div>
-
-<button type="button" class="btn btn-primary">Primary</button>
-<button type="button" class="btn btn-secondary">Secondary</button>
-<button type="button" class="btn btn-success">Success</button>
-<button type="button" class="btn btn-danger">Danger</button>
-<button type="button" class="btn btn-warning">Warning</button>
-<button type="button" class="btn btn-info">Info</button>
-<button type="button" class="btn btn-light">Light</button>
-<button type="button" class="btn btn-dark">Dark</button>
-
-<button type="button" class="btn btn-link">Link</button>
-{% endblock %}
-
-{% block logo %}
-<div class="text-center">
-    <img src="{% static "img/active-directory.png" %}" class="rounded" alt="Logo" >
+<h1>{% translate 'About Page' %}</h1>
+<div class="container mt-3 text-bg-light border border-danger rounded-4 shadow-lg">
+	<fieldset><legend>Active Directory Settings:</legend>
+		<p>Settings of Active Directory are read from <span class="text-bg-danger">.env</span> file</p>
+		<p>Domain Name: {{ ad_domain }}</p>
+		<p>Domain Server: {{ ad_server }}</p>
+		<p>Domain User Admin: {{ ad_admin_user }}</p>
+		<p>Domain User Attrs: {{ ad_user_attrs }}</p>
+		<p>Domain Group Attrs: {{ ad_group_attrs }}</p>
+	</fieldset>
 </div>
-{% endblock %}
-
-{% block variable %}
-	<h3>Hello {{ firstname }}, how are you?</h3>
+<h2>More information</h2>
+<p>For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank">GitHub repository</a>.</p>
 {% endblock %}
