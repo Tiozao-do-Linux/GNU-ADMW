@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block subtitle %} - {% translate 'About Page' %}{% endblock %}
+{% block subtitle %} - {% trans 'About Page' %}{% endblock %}
 
 {% block content %}
-<h1>{% translate 'About Page' %}</h1>
+<h1>{% trans 'About Page' %}</h1>
+<hr>
 <div class="container mt-3 text-bg-light border border-danger rounded-4 shadow-lg">
 	<fieldset><legend>Active Directory Settings:</legend>
 		<p>Settings of Active Directory are read from <span class="text-bg-danger">.env</span> file</p>
@@ -15,6 +16,4 @@
 		<p>Domain Group Attrs: {{ ad_group_attrs }}</p>
 	</fieldset>
 </div>
-<h2>More information</h2>
-<p>For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank">GitHub repository</a>.</p>
 {% endblock %}

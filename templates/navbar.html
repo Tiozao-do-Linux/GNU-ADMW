@@ -6,23 +6,26 @@
       <a class="navbar-brand" href="#{ % url 'dashboard' %}">
         <img src="{% static "img/active-directory.png" %}" alt="Logo" style="width:40px;" class="rounded-pill">
          AD Web Interface <i class="fa fa-fw fa-globe"></i></a>
-         <!-- { % if user.is_authenticated %}-->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav me-auto">
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fa fa-fw fa-home"></i>Home</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#{% url 'user_list' %}"><i class="fa fa-solid fa-user"></i> Users</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#{% url 'group_list' %}"><i class="fa fa-solid fa-users"></i> Groups</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#{% url 'computer_list' %}"><i class="fa fa-solid fa-desktop"></i> Computers</a></li>
+            <li class="nav-item"><a class="nav-link" href="#{% url 'user_list' %}"><i class="fa fa-solid fa-user"></i> Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="#{% url 'group_list' %}"><i class="fa fa-solid fa-users"></i> Groups</a></li>
+            <li class="nav-item"><a class="nav-link" href="#{% url 'organization_list' %}"><i class="fa fa-solid fa-sitemap"></i> Organizations</a></li>
+            <li class="nav-item"><a class="nav-link" href="#{% url 'computer_list' %}"><i class="fa fa-solid fa-desktop"></i> Computers</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="fa fa-solid fa-info"></i> About</a></li>
           </ul>
+          {% if user.is_authenticated %}
           <span class="navbar-text me-3">
               Welcome, {{ user.username }} - {{ user.first_name }} {{ user.last_name }} - {{ user.email }}
           </span>
-          <a href="#{ % url 'logout' %}" class="btn btn-outline-light disabled"><i class="fa fa-fw fa-power-off"></i> Logout</a>
-        </div>
-      <!-- { % endif %} -->
+          <a href="{% url 'logout' %}" class="btn btn-outline-light"><i class="fa fa-fw fa-power-off"></i> Logout</a>
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light"><i class="fa fa-fw fa-toggle-on"></i> Login</a>
+          {% endif %}
+      </div>
   </div>
 </nav>

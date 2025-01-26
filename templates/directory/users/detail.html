@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block subtitle %} - {% translate 'User Detail Page' %}{% endblock %}
+
+{% block content %}
+    <h1>{% translate 'User Detail Page' %}</h1>
+    {{ object }}
+{% endblock %}

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2025-01-26
+
+### Added/Changed/Removed
+- Add "menu" itens with icons
+
 ## [0.0.5] - 2025-01-22
 
 ### Added/Changed/Removed
