@@ -59,6 +59,42 @@ python test-config-env.py
 python test-active-directory.py
 ```
 
+#### Output example
+```
+# Retrieve the configuration parameters:
+	AD_DOMAIN=tiozaodolinux.com
+	AD_SERVER=ldaps://dc01.tiozaodolinux.com
+	AD_ADMIN_USER=Administrator@tiozaodolinux.com
+	AD_ADMIN_PASSWORD=XXXXXXXXXXXXXXXXXXXXXXXXXXX
+	AD_USER_ATTRS=['cn', 'sn', 'title', 'description', 'physicalDeliveryOfficeName', 'telephoneNumber', 'givenName', 'displayName', 'department', 'company', 'name', 'sAMAccountName', 'userPrincipalName', 'mail', 'loginShell', 'objectGUID', 'objectSid']
+	AD_GROUP_ATTRS=['cn', 'sn', 'description', 'name', 'sAMAccountName', 'member', 'objectGUID', 'objectSid']
+# Connect with AD_SERVER - ldaps://dc01.tiozaodolinux.com with Administrator@tiozaodolinux.com / XXXXXXXXXXXXXXXXXXXXXXXXX
+# Find user by name="tiozao
+# Display user info
+
+======================================================================
+USER:..... CN=tiozao,CN=Users,DC=tiozaodolinux,DC=com
+======================================================================
+cn----------------------------  :  tiozao
+sn----------------------------  :  do Linux
+title-------------------------  :  Título do Cargo
+description-------------------  :  ['Descrição Opcional']
+physicalDeliveryOfficeName----  :  Endereço Completo
+telephoneNumber---------------  :  +55 67 9 81183482
+givenName---------------------  :  Tiozão
+displayName-------------------  :  Tiozão do Linux
+department--------------------  :  Nome do Departamento
+company-----------------------  :  Nome da Empresa
+name--------------------------  :  tiozao
+sAMAccountName----------------  :  tiozao
+userPrincipalName-------------  :  tiozao@tiozaodolinux.com
+mail--------------------------  :  jarbelix@gmail.com
+loginShell--------------------  :  /bin/bash
+objectGUID--------------------  :  {ec206896-e6e2-4edc-a4b0-6accc8e3e981}
+objectSid---------------------  :  S-1-5-21-253206946-2420641807-3433596073-1124
+
+```
+
 ### Start application
 ```sh
 
