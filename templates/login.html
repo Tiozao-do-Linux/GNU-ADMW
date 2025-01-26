@@ -7,11 +7,18 @@
 {% block content %}
 	<h1>{% trans 'Login Page' %}</h1>
 	<hr>
-	
-	<div class="container mt-3">
-		<h3>Form Validation</h3>
-		<p>Try to submit the form.</p>
-		  
+
+	<div class="container">
+		<div class="row justify-content-center align-items-center">
+			<div class="col col-md-auto">
+			<figure>
+				<img src="{% static 'img/active-directory.png' %}" alt="Active Directory Logo" width="20%">
+				<figcaption>Logo of GNU-ADMW Projet.</figcaption>
+				<p><cite>The Logo:</cite> find by Google Search in 2025.</p>
+			</figure>
+			</div>
+		</div>
+		
 		<form action="" class="was-validated">
 		  {% csrf_token %} 
 		  <div class="mb-3 mt-3">
