@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7] - 2025-02-01
+
+### Added/Changed/Removed
+- Refactor settings.py and env.example
+- test-active-directory.py now shows user and group
+- Clean urls.py and views.py
+- Add "now" in template about.html
+- Small modifications to the template directory/list.html
+- Add two background images
+
 ## [0.0.6] - 2025-01-26
 
 ### Added/Changed/Removed

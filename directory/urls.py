@@ -2,22 +2,17 @@ from django.urls import path
 from directory.views import *
 
 urlpatterns = [
-    #path('', views.home, name='home'), # FBV
-    path('', HomeView.as_view(), name='home'), # CBV
-
-    #path('about/', views.about, name='about'), # FBV
-    path('about', AboutView.as_view(), name='about'), # CBV
-
+    path('', HomeView.as_view(), name='home'),
+    path('about', AboutView.as_view(), name='about'),
     path('login', LoginView.as_view(), name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
 
-    #path('user/', user_list, name='user_list'), 
     path('user', UserListView.as_view(), name='user_list'),
     path('user/<str:username>/', UserDetailView.as_view(), name='user_detail'),
 
     path('group', GroupListView.as_view(), name='group_list'),
 
-    path('orgnization', OrganizationListView.as_view(), name='organization_list'),
+    path('organization', OrganizationListView.as_view(), name='organization_list'),
 
     path('computer', ComputerListView.as_view(), name='computer_list'),
 

@@ -2,11 +2,22 @@
 {% block subtitle %}Users{% endblock %}
 
 {% block content %}
+<!--
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Users</h1>
-    <a href="{% url 'user_create' %}" class="btn btn-primary">Create User</a>
+    <a href="{ % url 'user_create' %}" class="btn btn-primary">Create User</a>
 </div>
+-->
+<h1>Users</h1>
+<ul>
+    {% for user in object_list %}
+    <li>{{ user.username }}</li>
+    {% empty %}
+    <li>No users</li>
+    {% endfor %}
+</ul>
 
+<!--
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
@@ -42,7 +53,7 @@
                         </td>
                     </tr>
                     
-                    <!-- Delete Modal -->
+                    < !-- Delete Modal -- >
                     <div class="modal fade" id="deleteModal{{ user.username }}" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -73,4 +84,6 @@
         </div>
     </div>
 </div>
+
+-->
 {% endblock %}

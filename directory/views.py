@@ -1,60 +1,69 @@
-from django.conf import settings
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.http import JsonResponse
-from django.views.generic import TemplateView, ListView, DetailView
+#from django.conf import settings
+from django.utils import timezone
 from ms_active_directory import ADDomain, ADUser, ADGroup
-from .forms import UserForm, GroupForm, PasswordResetForm
+from django.views.generic import TemplateView, ListView, DetailView
+from core.settings import ENV
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
+# from django.http import JsonResponse
+
+# from .forms import UserForm, GroupForm, PasswordResetForm
 from .models import ADOperation
-import logging
 
-logger = logging.getLogger(__name__)
+# import logging
+# logger = logging.getLogger(__name__)
 
-extra_context = {
-    'ad_domain' : settings.AD_DOMAIN,
-    'ad_server' : settings.AD_SERVER,
-    'ad_admin_user' : settings.AD_ADMIN_USER,
-    'ad_admin_password' : settings.AD_ADMIN_PASSWORD,
-    'ad_user_attrs' : settings.AD_USER_ATTRS,
-    'ad_group_attrs' : settings.AD_GROUP_ATTRS,
+env_context = {
+    'ad_domain' : ENV['AD_DOMAIN'],
+    'ad_server' : ENV['AD_SERVER'],
+    'ad_admin_user' : ENV['AD_ADMIN_USER'],
+    'ad_user_attrs' : ENV['AD_USER_ATTRS'],
+    'ad_group_attrs' : ENV['AD_GROUP_ATTRS'],
 }
-
-# def about(request):
-#     return render(request, 'about.html', context)
-
-# # "FBV (Function Base View)" X " CBV (Class Base View)"
-# ##########################################
-
-# # FBV ( url - view - html )
-# def home(request):
-#     return render(request, 'home.html', context)
-
-# ## OU
 
 ## Template Views
 #################
 
 class LoginView(TemplateView):
     template_name = 'login.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 class LogoutView(TemplateView):
     template_name = 'logout.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 class HomeView(TemplateView):
     template_name = 'home.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 class AboutView(TemplateView):
     template_name = 'about.html'
-    extra_context = extra_context
+    extra_context = env_context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["now"] = timezone.now()
+        return context
 
 ## List Views
 ##############
 
+# User Management Views
 class UserListView(ListView):
     template_name = 'directory/users/list.html'
-    model = ADUser
+    model = ADOperation
+    paginate_by = 100 # if pagination is desired
     # object_list -> ADUser.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 class GroupListView(ListView):
     template_name = 'directory/groups/list.html'

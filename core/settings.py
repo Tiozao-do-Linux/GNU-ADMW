@@ -7,22 +7,31 @@ from decouple import config, Csv
 # Basedir
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Retrieve the configuration parameters:
-AD_DOMAIN = config('AD_DOMAIN',default='yourdomain.com')
-AD_SERVER = config('AD_SERVER', default='ldaps://ip-or-dnsname')
+# Retrieve the configuration parameters from .env:
+ENV = {
+        'AD_DOMAIN': config('AD_DOMAIN',default='yourdomain.com'),
+        'AD_SERVER': config('AD_SERVER', default='ldaps://ip-or-dnsname'),
+        'AD_ADMIN_USER': config('AD_ADMIN_USER', default='admin@yourdomain.com'),
+        'AD_ADMIN_PASSWORD': config('AD_ADMIN_PASSWORD', default='password-of-admin'),
+        'AD_USER_ATTRS': config('AD_USER_ATTRS', default=[], cast=Csv()),
+        'AD_GROUP_ATTRS': config('AD_GROUP_ATTRS', default=[], cast=Csv()),
+        'SECRET_KEY': config('SECRET_KEY',default='your-secret-key-here'),
+        'DEBUG': config('DEBUG',default=False, cast=bool),
+        'ALLOWED_HOSTS': config('ALLOWED_HOSTS', default=['*'], cast=Csv()),
+        'CSRF_TRUSTED_ORIGINS' : config('CSRF_TRUSTED_ORIGINS', default=['https://'], cast=Csv()),
+        'DATABASE_URL': config('DATABASE_URL',default=None),
+        'TIME_ZONE': config('TIME_ZONE',default='America/Campo_Grande'),
+}
 
-AD_ADMIN_USER = config('AD_ADMIN_USER', default='admin@yourdomain.com')
-AD_ADMIN_PASSWORD = config('AD_ADMIN_PASSWORD', default='password-of-admin')
+SECRET_KEY = ENV['SECRET_KEY']
 
-AD_USER_ATTRS = config('AD_USER_ATTRS', default=[], cast=Csv())
-AD_GROUP_ATTRS = config('AD_GROUP_ATTRS', default=[], cast=Csv())
+DEBUG = ENV['DEBUG']
 
-SECRET_KEY = config('SECRET_KEY',default='your-secret-key-here')
-DEBUG = config('DEBUG',default=False, cast=bool)
+ALLOWED_HOSTS = ENV['ALLOWED_HOSTS']
 
-ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ENV['CSRF_TRUSTED_ORIGINS']
 
-#CSRF_TRUSTED_ORIGINS = ['https://*.tiozaodolinux.com']
+TIME_ZONE = ENV['TIME_ZONE']
 
 # Application definition
 INSTALLED_APPS = [
@@ -71,12 +80,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if ENV['DATABASE_URL']:
+    DATABASES = {
+        'default': ENV['DATABASE_URL']
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -97,14 +111,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'America/Campo_Grande'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = (
+    ('en-us', 'English (US)'),
     ('pt-br', 'Português do Brasil'),
-    ('en-us', 'USA English'),
 )
 
 LOCALE_PATHS = [ BASE_DIR / 'locale', ]
@@ -128,3 +141,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Production settings
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

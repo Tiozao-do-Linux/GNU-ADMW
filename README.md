@@ -62,37 +62,82 @@ python test-active-directory.py
 #### Output example
 ```
 # Retrieve the configuration parameters:
-	AD_DOMAIN=tiozaodolinux.com
-	AD_SERVER=ldaps://dc01.tiozaodolinux.com
-	AD_ADMIN_USER=Administrator@tiozaodolinux.com
-	AD_ADMIN_PASSWORD=XXXXXXXXXXXXXXXXXXXXXXXXXXX
-	AD_USER_ATTRS=['cn', 'sn', 'title', 'description', 'physicalDeliveryOfficeName', 'telephoneNumber', 'givenName', 'displayName', 'department', 'company', 'name', 'sAMAccountName', 'userPrincipalName', 'mail', 'loginShell', 'objectGUID', 'objectSid']
-	AD_GROUP_ATTRS=['cn', 'sn', 'description', 'name', 'sAMAccountName', 'member', 'objectGUID', 'objectSid']
-# Connect with AD_SERVER - ldaps://dc01.tiozaodolinux.com with Administrator@tiozaodolinux.com / XXXXXXXXXXXXXXXXXXXXXXXXX
-# Find user by name="tiozao
+# Connect with AD_DOMAIN - tiozaodolinux.com at AD_SERVER - ldaps://dc01.tiozaodolinux.com with Administrator@tiozaodolinux.com
+# Find user by name="tiozao"
 # Display user info
-
-======================================================================
-USER:..... CN=tiozao,CN=Users,DC=tiozaodolinux,DC=com
-======================================================================
-cn----------------------------  :  tiozao
-sn----------------------------  :  do Linux
-title-------------------------  :  Título do Cargo
-description-------------------  :  ['Descrição Opcional']
-physicalDeliveryOfficeName----  :  Endereço Completo
-telephoneNumber---------------  :  +55 67 9 81183482
-givenName---------------------  :  Tiozão
-displayName-------------------  :  Tiozão do Linux
-department--------------------  :  Nome do Departamento
-company-----------------------  :  Nome da Empresa
-name--------------------------  :  tiozao
-sAMAccountName----------------  :  tiozao
-userPrincipalName-------------  :  tiozao@tiozaodolinux.com
-mail--------------------------  :  jarbelix@gmail.com
-loginShell--------------------  :  /bin/bash
-objectGUID--------------------  :  {ec206896-e6e2-4edc-a4b0-6accc8e3e981}
-objectSid---------------------  :  S-1-5-21-253206946-2420641807-3433596073-1124
-
+================================================================================
+OBJECT DN: CN=tiozao,CN=Users,DC=tiozaodolinux,DC=com
+================================================================================
+{
+    "objectClass": [
+        "top",
+        "person",
+        "organizationalPerson",
+        "user"
+    ],
+    "cn": "tiozao",
+    "sn": "do Linux",
+    "title": "Título do Cargo",
+    "description": [
+        "Descrição Opcional"
+    ],
+    "physicalDeliveryOfficeName": "Endereço Completo",
+    "telephoneNumber": "+55 67 9 81183482",
+    "givenName": "Tiozão",
+    "displayName": "Tiozão do Linux",
+    "department": "Nome do Departamento",
+    "company": "Nome da Empresa",
+    "name": "tiozao",
+    "objectGUID": "{ec206896-e6e2-4edc-a4b0-6accc8e3e981}",
+    "objectSid": "S-1-5-21-253206946-2420641807-3433596073-1124",
+    "sAMAccountName": "tiozao",
+    "userPrincipalName": "tiozao@tiozaodolinux.com",
+    "loginShell": "/bin/bash",
+    "mail": "jarbelix@gmail.com"
+}
+--------------------------------------------------------------------------------
+# Find group by name="Turma da Monica"
+# Display group info
+================================================================================
+OBJECT DN: CN=Turma da Monica,CN=Users,DC=tiozaodolinux,DC=com
+================================================================================
+{
+    "objectClass": [
+        "top",
+        "group"
+    ],
+    "cn": "Turma da Monica",
+    "description": [
+        "Grupo de Usuários da Turma da Mônica"
+    ],
+    "name": "Turma da Monica",
+    "objectGUID": "{5eecc0e4-5091-4c2b-9ef8-c534feac9078}",
+    "objectSid": "S-1-5-21-253206946-2420641807-3433596073-1103",
+    "sAMAccountName": "Turma da Monica",
+    "member": [
+        "CN=rosinha,OU=Producao,DC=tiozaodolinux,DC=com",
+        "CN=monica,OU=RH,DC=tiozaodolinux,DC=com",
+        "CN=anjinho,OU=Financeiro,DC=tiozaodolinux,DC=com",
+        "CN=rolo,OU=RH,DC=tiozaodolinux,DC=com",
+        "CN=carminha.frufru,OU=Producao,DC=tiozaodolinux,DC=com",
+        "CN=magali,OU=Producao,DC=tiozaodolinux,DC=com",
+        "CN=marina,OU=TI,DC=tiozaodolinux,DC=com",
+        "CN=cebolinha,OU=Financeiro,DC=tiozaodolinux,DC=com",
+        "CN=capitao.feio,OU=Comercial,DC=tiozaodolinux,DC=com",
+        "CN=rita.najura,OU=Logistica,DC=tiozaodolinux,DC=com",
+        "CN=franjinha,OU=Logistica,DC=tiozaodolinux,DC=com",
+        "CN=horacio,OU=TI,DC=tiozaodolinux,DC=com",
+        "CN=piteco,OU=Comercial,DC=tiozaodolinux,DC=com",
+        "CN=ze.vampir,OU=Contabil,DC=tiozaodolinux,DC=com",
+        "CN=dudu,OU=RH,DC=tiozaodolinux,DC=com",
+        "CN=xaveco,OU=TI,DC=tiozaodolinux,DC=com",
+        "CN=seu.cebola,OU=Presidente,DC=tiozaodolinux,DC=com",
+        "CN=chico.bento,OU=Comercial,DC=tiozaodolinux,DC=com",
+        "CN=juca,OU=Logistica,DC=tiozaodolinux,DC=com",
+        "CN=cascao,OU=Contabil,DC=tiozaodolinux,DC=com"
+    ]
+}
+--------------------------------------------------------------------------------
 ```
 
 ### Start application
