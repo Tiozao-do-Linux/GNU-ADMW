@@ -27,13 +27,42 @@ print(f'# Connect with AD_DOMAIN - {AD_DOMAIN} at AD_SERVER - {AD_SERVER} with {
 domain = ADDomain(AD_DOMAIN, ldap_servers_or_uris=[AD_SERVER])
 session = domain.create_session_as_user(user=AD_ADMIN_USER, password=AD_ADMIN_PASSWORD)
 
-print(f'# Find user by name="tiozao"')
+print(f'# Find user by sAMAccountName="tiozao"')
 user = session.find_user_by_sam_name('tiozao', AD_USER_ATTRS)
 print(f'# Display user info')
 print_AD_Object(user)
 
-print(f'# Find group by name="Turma da Monica"')
+print(f'# Find group by sAMAccountName="Turma da Monica"')
 group = session.find_group_by_sam_name('Turma da Monica', AD_GROUP_ATTRS)
 print(f'# Display group info')
 print_AD_Object(group)
+
+# How to log into AD with a user belonging to a specific group
+# 1): find the user
+# 2): verifiy the user is a member of the group
+# 3): log into AD as the user
+
+print(f'# Find user by sAMAccountName="monica"')
+monica_user = session.find_user_by_sam_name('monica', ['memberOf'] )
+
+all_groups = monica_user.get("memberOf")
+dn_user = monica_user.distinguished_name
+dn_group = group.distinguished_name
+
+print(f'# Verify monica_user is a member of "Turma da Monica"')
+if all_groups:
+    if dn_group in all_groups:
+        print(f'## Monica User is a member of "Turma da Monica"')
+        try:
+            print(f'# Try Login into AD as monica_user')
+            monica_session = domain.create_session_as_user(user=dn_user, password=AD_ADMIN_PASSWORD)
+            print(f'# Login Successfully')
+        except Exception as e:
+            print(f'# Login Failed')
+            print(f'## Error: {str(e)}')
+    else:
+        print(f'## Monica User is NOT a member of "Turma da Monica"')
+else:
+    print(f'## Monica User is NOT a member of any groups')
+
 
