@@ -15,6 +15,7 @@ ENV = {
         'AD_ADMIN_PASSWORD': config('AD_ADMIN_PASSWORD', default='password-of-admin'),
         'AD_USER_ATTRS': config('AD_USER_ATTRS', default=[], cast=Csv()),
         'AD_GROUP_ATTRS': config('AD_GROUP_ATTRS', default=[], cast=Csv()),
+        'AD_GROUP_CAN_VIEW': config('AD_GROUP_CAN_VIEW', default='View AD Group'),
         'SECRET_KEY': config('SECRET_KEY',default='your-secret-key-here'),
         'DEBUG': config('DEBUG',default=False, cast=bool),
         'ALLOWED_HOSTS': config('ALLOWED_HOSTS', default=['*'], cast=Csv()),
