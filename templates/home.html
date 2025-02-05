@@ -5,12 +5,16 @@
 {% block subtitle %} - {% trans 'Home Page' %}{% endblock %}
 
 {% block content %}
-	<h1>{% trans 'Home Page' %}</h1>
-	<hr>
+	<div class="jumbotron">
+		<h1>{% trans 'Home Page' %}</h1>
+		<hr>
+  	</div>
+
 	<div class="container-fluid bg-1 text-center">
 		<h2>Who Am I?</h2>
 		<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
 		<h2>I'm a Linux uncle who likes to share knowledge.</h2>
+		<hr>
 	</div>
-	<hr>
+
 {% endblock %}

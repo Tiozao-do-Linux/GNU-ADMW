@@ -5,8 +5,11 @@
 {% block subtitle %} - {% trans 'About Page' %}{% endblock %}
 
 {% block content %}
-<h1>{% trans 'About Page' %}</h1>
-<hr>
+<div class="jumbotron">
+	<h1>{% trans 'About Page' %}</h1>
+	<hr>
+  </div>
+
 <div class="container-fluid bg-1 text-center">
 	<h2>What is GNU-ADMW?</h2>
 	<img src="{% static 'img/active-directory.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
@@ -24,4 +27,10 @@
 		<p>Domain Group Can Login: {{ ad_group_can_login }}</p>
 	</fieldset>
 </div>
+<div class="container-fluid bg-grey text-center">
+	<h2>Our Values</h2>
+	<h4><strong>MISSION:</strong> Our mission lorem ipsum..</h4>      
+	<p><strong>VISION:</strong> Our vision Lorem ipsum..
+</div>
+
 {% endblock %}
