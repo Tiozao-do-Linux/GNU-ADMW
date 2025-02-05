@@ -15,7 +15,7 @@ ENV = {
         'AD_ADMIN_PASSWORD': config('AD_ADMIN_PASSWORD', default='password-of-admin'),
         'AD_USER_ATTRS': config('AD_USER_ATTRS', default=[], cast=Csv()),
         'AD_GROUP_ATTRS': config('AD_GROUP_ATTRS', default=[], cast=Csv()),
-        'AD_GROUP_CAN_VIEW': config('AD_GROUP_CAN_VIEW', default='View AD Group'),
+        'AD_GROUP_CAN_LOGIN': config('AD_GROUP_CAN_LOGIN', default='Login AD Group'),
         'SECRET_KEY': config('SECRET_KEY',default='your-secret-key-here'),
         'DEBUG': config('DEBUG',default=False, cast=bool),
         'ALLOWED_HOSTS': config('ALLOWED_HOSTS', default=['*'], cast=Csv()),
@@ -96,18 +96,10 @@ else:
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    { 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
 # Internationalization

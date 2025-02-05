@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load i18n %}
 
 {% block subtitle %} - {% trans 'Home Page' %}{% endblock %}
@@ -6,11 +7,10 @@
 {% block content %}
 	<h1>{% trans 'Home Page' %}</h1>
 	<hr>
-	<h2>Below are used some variables:</h2>
-	<p><code>{ % get_current_language as LANGUAGE_CODE % }</code></p>
-	<p><code>{ % get_available_languages as LANGUAGES % }</code></p>
-	{% get_current_language as LANGUAGE_CODE %}
-	{% get_available_languages as LANGUAGES %}
-	<h2>Available languages: {{ LANGUAGES }}</h2>
-	<h2>Current language: {{ LANGUAGE_CODE }}</h2>
+	<div class="container-fluid bg-1 text-center">
+		<h2>Who Am I?</h2>
+		<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
+		<h2>I'm a Linux uncle who likes to share knowledge.</h2>
+	</div>
+	<hr>
 {% endblock %}

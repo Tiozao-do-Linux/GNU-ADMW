@@ -22,7 +22,7 @@ AD_ADMIN_USER = ENV['AD_ADMIN_USER']
 AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
 AD_USER_ATTRS = ENV['AD_USER_ATTRS'] 
 AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
-AD_GROUP_CAN_VIEW = ENV['AD_GROUP_CAN_VIEW']
+AD_GROUP_CAN_LOGIN = ENV['AD_GROUP_CAN_LOGIN']
 
 print(f'# Connect with AD_DOMAIN - {AD_DOMAIN} at AD_SERVER - {AD_SERVER} with {AD_ADMIN_USER}')
 domain = ADDomain(AD_DOMAIN, ldap_servers_or_uris=[AD_SERVER])
@@ -33,8 +33,8 @@ user = session.find_user_by_sam_name('tiozao', AD_USER_ATTRS)
 print(f'# Display user info')
 print_AD_Object(user)
 
-print(f'# Find group by sAMAccountName="{AD_GROUP_CAN_VIEW}"')
-group = session.find_group_by_sam_name(AD_GROUP_CAN_VIEW, AD_GROUP_ATTRS)
+print(f'# Find group by sAMAccountName="{AD_GROUP_CAN_LOGIN}"')
+group = session.find_group_by_sam_name(AD_GROUP_CAN_LOGIN, AD_GROUP_ATTRS)
 print(f'# Display group info')
 print_AD_Object(group)
 
@@ -50,10 +50,10 @@ all_groups = monica_user.get("memberOf")
 dn_user = monica_user.distinguished_name
 dn_group = group.distinguished_name
 
-print(f'# Verify monica_user is a member of "{AD_GROUP_CAN_VIEW}"')
+print(f'# Verify monica_user is a member of "{AD_GROUP_CAN_LOGIN}"')
 if all_groups:
     if dn_group in all_groups:
-        print(f'## Monica User is a member of "{AD_GROUP_CAN_VIEW}"')
+        print(f'## Monica User is a member of "{AD_GROUP_CAN_LOGIN}"')
         try:
             print(f'# Try Login into AD as monica_user')
             monica_session = domain.create_session_as_user(user=dn_user, password=AD_ADMIN_PASSWORD)
@@ -62,7 +62,7 @@ if all_groups:
             print(f'# Login Failed')
             print(f'## Error: {str(e)}')
     else:
-        print(f'## Monica User is NOT a member of "{AD_GROUP_CAN_VIEW}"')
+        print(f'## Monica User is NOT a member of "{AD_GROUP_CAN_LOGIN}"')
 else:
     print(f'## Monica User is NOT a member of any groups')
 

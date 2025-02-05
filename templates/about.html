@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load i18n %}
 
 {% block subtitle %} - {% trans 'About Page' %}{% endblock %}
 
 {% block content %}
 <h1>{% trans 'About Page' %}</h1>
+<hr>
+<div class="container-fluid bg-1 text-center">
+	<h2>What is GNU-ADMW?</h2>
+	<img src="{% static 'img/active-directory.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
+	<h2>GNU-ADMW is an Active Directory Management Web</h2>
+</div>
 <hr>
 <div class="container mt-3 text-bg-light border border-danger rounded-4 shadow-lg">
 	<fieldset><legend>Active Directory Settings:</legend>
