@@ -1,5 +1,5 @@
 from django.urls import path 
-from directory.views import *
+from .views import *
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -9,6 +9,12 @@ urlpatterns = [
 
     path('user', UserListView.as_view(), name='user_list'),
     path('user/<str:username>/', UserDetailView.as_view(), name='user_detail'),
+
+#    path('users/', views.user_list, name='user_list'),
+#    path('users/create/', views.user_create, name='user_create'),
+#    path('users/<str:username>/modify/', views.user_modify, name='user_modify'),
+#    path('users/<str:username>/reset-password/', views.user_reset_password, name='user_reset_password'),
+#    path('audit-log/', views.audit_log, name='audit_log'),
 
     path('group', GroupListView.as_view(), name='group_list'),
 
@@ -31,3 +37,4 @@ urlpatterns = [
 #    path('group/', views.group, name='group'), 
 #    path('computer/', views.computer, name='computer'), 
 ]
+

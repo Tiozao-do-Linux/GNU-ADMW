@@ -1,16 +1,15 @@
 #from django.conf import settings
-from django.utils import timezone
-from ms_active_directory import ADDomain, ADUser, ADGroup
+from ms_active_directory import ADDomain #, ADUser, ADGroup
 from django.views.generic import TemplateView, ListView, DetailView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.utils import timezone
+
 from core.settings import ENV
-
-# from django.shortcuts import render, redirect, get_object_or_404
-# from django.contrib.auth.decorators import login_required
-# from django.contrib import messages
-# from django.http import JsonResponse
-
-# from .forms import UserForm, GroupForm, PasswordResetForm
-from .models import ADOperation
+from .models import ADUser, ADGroup, AuditLog
+from .forms import UserCreationForm, UserModificationForm
 
 # import logging
 # logger = logging.getLogger(__name__)
@@ -21,22 +20,11 @@ env_context = {
     'ad_admin_user' : ENV['AD_ADMIN_USER'],
     'ad_user_attrs' : ENV['AD_USER_ATTRS'],
     'ad_group_attrs' : ENV['AD_GROUP_ATTRS'],
+    'ad_group_can_login' : ENV['AD_GROUP_CAN_LOGIN'],
 }
 
 ## Template Views
 #################
-
-class LoginView(TemplateView):
-    template_name = 'login.html'
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
-
-class LogoutView(TemplateView):
-    template_name = 'logout.html'
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
 
 class HomeView(TemplateView):
     template_name = 'home.html'
@@ -52,13 +40,26 @@ class AboutView(TemplateView):
         context["now"] = timezone.now()
         return context
 
+class LoginView(TemplateView):
+    template_name = 'login.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
+
+class LogoutView(TemplateView):
+    template_name = 'logout.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
+
+
 ## List Views
 ##############
 
 # User Management Views
 class UserListView(ListView):
-    template_name = 'directory/users/list.html'
-    model = ADOperation
+    template_name = 'users/list.html'
+    model = ADUser
     paginate_by = 100 # if pagination is desired
     # object_list -> ADUser.objects.all()
     def get_context_data(self, **kwargs):
@@ -66,17 +67,17 @@ class UserListView(ListView):
         return context
 
 class GroupListView(ListView):
-    template_name = 'directory/groups/list.html'
+    template_name = 'groups/list.html'
     model = ADGroup
     # object_list -> ADGroup.objects.all()
 
 class ComputerListView(ListView):
-    template_name = 'directory/computers/list.html'
+    template_name = 'computers/list.html'
     model = ADGroup
     # object_list -> ADGroup.objects.all()
 
 class OrganizationListView(ListView):
-    template_name = 'directory/organizations/list.html'
+    template_name = 'organizations/list.html'
     model = ADGroup
     # object_list -> ADGroup.objects.all()
 
@@ -84,216 +85,173 @@ class OrganizationListView(ListView):
 ################
 
 class UserDetailView(DetailView):
-    template_name = 'directory/users/detail.html'
+    template_name = 'users/detail.html'
     model = ADUser
     # object -> ADUser.objects.get(pk=id)
 
 
-# # User Management Views
-# @login_required
-# def user_list(request):
-#     try:
-#         domain = ADDomain(settings.AD_DOMAIN,ldap_servers_or_uris=[settings.AD_SERVER])
-#         users = domain.get_users()
-#         return render(request, 'directory/users/list.html', {'users': users})
-#     except Exception as e:
-#         messages.error(request, f"Error fetching users: {str(e)}")
-#         return render(request, 'directory/users/list.html', {'users': []})
+class ADConnection:
+    """Context manager for AD operations"""
+    def __init__(self):
+        self.domain = None
 
-# @login_required
-# def user_detail(request, username):
-#     try:
-#         domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#         user = domain.get_user(username)
-#         if request.method == 'POST':
-#             form = UserForm(request.POST)
-#             if form.is_valid():
-#                 # Update user attributes
-#                 user.update(
-#                     given_name=form.cleaned_data['first_name'],
-#                     surname=form.cleaned_data['last_name'],
-#                     email=form.cleaned_data['email'],
-#                     enabled=form.cleaned_data['enabled']
-#                 )
-#                 ADOperation.objects.create(
-#                     user=request.user,
-#                     operation='modify_user',
-#                     target=username,
-#                     details=f"Modified user attributes"
-#                 )
-#                 messages.success(request, f"User {username} updated successfully")
-#                 return redirect('user_list')
-#         else:
-#             form = UserForm(initial={
-#                 'first_name': user.given_name,
-#                 'last_name': user.surname,
-#                 'email': user.email,
-#                 'enabled': user.enabled
-#             })
-#         return render(request, 'directory/users/detail.html', {
-#             'ad_user': user,
-#             'form': form
-#         })
-#     except Exception as e:
-#         messages.error(request, f"Error: {str(e)}")
-#         return redirect('user_list')
+    def __enter__(self):
+        # Initialize AD connection using current user's credentials
+        self.domain = ADDomain()
+        return self.domain
 
-# @login_required
-# def user_create(request):
-#     if request.method == 'POST':
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#                 new_user = domain.create_user(
-#                     username=form.cleaned_data['username'],
-#                     password=form.cleaned_data['password'],
-#                     given_name=form.cleaned_data['first_name'],
-#                     surname=form.cleaned_data['last_name'],
-#                     email=form.cleaned_data['email']
-#                 )
-#                 ADOperation.objects.create(
-#                     user=request.user,
-#                     operation='create_user',
-#                     target=form.cleaned_data['username']
-#                 )
-#                 messages.success(request, f"User {form.cleaned_data['username']} created successfully")
-#                 return redirect('user_list')
-#             except Exception as e:
-#                 messages.error(request, f"Error creating user: {str(e)}")
-#     else:
-#         form = UserForm()
-#     return render(request, 'directory/users/create.html', {'form': form})
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # Cleanup AD connection
+        if self.domain:
+            self.domain = None
 
-# @login_required
-# def user_delete(request, username):
-#     if request.method == 'POST':
-#         try:
-#             domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#             user = domain.get_user(username)
-#             user.delete()
-#             ADOperation.objects.create(
-#                 user=request.user,
-#                 operation='delete_user',
-#                 target=username
-#             )
-#             messages.success(request, f"User {username} deleted successfully")
-#         except Exception as e:
-#             messages.error(request, f"Error deleting user: {str(e)}")
-#     return redirect('user_list')
-
-# # Group Management Views
-# @login_required
-# def group_list(request):
-#     try:
-#         domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#         groups = domain.get_groups()
-#         return render(request, 'directory/groups/list.html', {'groups': groups})
-#     except Exception as e:
-#         messages.error(request, f"Error fetching groups: {str(e)}")
-#         return render(request, 'directory/groups/list.html', {'groups': []})
-
-# @login_required
-# def group_detail(request, group_name):
-#     try:
-#         domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#         group = domain.get_group(group_name)
-#         members = group.get_members()
-        
-#         if request.method == 'POST':
-#             form = GroupForm(request.POST)
-#             if form.is_valid():
-#                 group.update(
-#                     display_name=form.cleaned_data['display_name'],
-#                     description=form.cleaned_data['description']
-#                 )
-#                 ADOperation.objects.create(
-#                     user=request.user,
-#                     operation='modify_group',
-#                     target=group_name
-#                 )
-#                 messages.success(request, f"Group {group_name} updated successfully")
-#                 return redirect('group_list')
-#         else:
-#             form = GroupForm(initial={
-#                 'display_name': group.display_name,
-#                 'description': group.description
-#             })
-        
-#         return render(request, 'directory/groups/detail.html', {
-#             'group': group,
-#             'members': members,
-#             'form': form
-#         })
-#     except Exception as e:
-#         messages.error(request, f"Error: {str(e)}")
-#         return redirect('group_list')
-
-# # Computer Management Views
-# @login_required
-# def computer_list(request):
-#     try:
-#         domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#         computers = domain.get_computers()
-#         return render(request, 'directory/computers/list.html', {'computers': computers})
-#     except Exception as e:
-#         messages.error(request, f"Error fetching computers: {str(e)}")
-#         return render(request, 'directory/computers/list.html', {'computers': []})
-
-# # Password Reset View
-# @login_required
-# def password_reset(request, username):
-#     if request.method == 'POST':
-#         form = PasswordResetForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#                 user = domain.get_user(username)
-#                 user.change_password(form.cleaned_data['new_password'])
-#                 ADOperation.objects.create(
-#                     user=request.user,
-#                     operation='reset_password',
-#                     target=username
-#                 )
-#                 messages.success(request, f"Password reset successful for {username}")
-#                 return redirect('user_detail', username=username)
-#             except Exception as e:
-#                 messages.error(request, f"Error resetting password: {str(e)}")
-#     else:
-#         form = PasswordResetForm()
+@login_required
+def user_list(request):
+    """View to list all AD users"""
+    search_query = request.GET.get('search', '')
     
-#     return render(request, 'directory/users/password_reset.html', {
-#         'form': form,
-#         'username': username
-#     })
+    with ADConnection() as domain:
+        # Get users from AD
+        users = domain.find_users(search_query) if search_query else domain.get_all_users()
+        
+        # Convert AD users to our model format
+        user_list = [ADUser(
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            email=user.email,
+            department=user.department,
+            enabled=user.is_enabled
+        ) for user in users]
 
-# # Group Membership Management
-# @login_required
-# def manage_group_membership(request, group_name):
-#     if request.method == 'POST':
-#         try:
-#             domain = ADDomain(domain_name=settings.AD_DOMAIN)
-#             group = domain.get_group(group_name)
-#             action = request.POST.get('action')
-#             username = request.POST.get('username')
-            
-#             user = domain.get_user(username)
-            
-#             if action == 'add':
-#                 group.add_members([user])
-#                 operation = 'add_to_group'
-#             else:
-#                 group.remove_members([user])
-#                 operation = 'remove_from_group'
-                
-#             ADOperation.objects.create(
-#                 user=request.user,
-#                 operation=operation,
-#                 target=f"{username} in {group_name}"
-#             )
-            
-#             return JsonResponse({'status': 'success'})
-#         except Exception as e:
-#             return JsonResponse({'status': 'error', 'message': str(e)})
+    # Pagination
+    paginator = Paginator(user_list, 25)
+    page = request.GET.get('page')
+    users = paginator.get_page(page)
+
+    return render(request, 'ad_manager/user_list.html', {'users': users, 'search_query': search_query})
+
+@login_required
+def user_create(request):
+    """View to create new AD user"""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            try:
+                with ADConnection() as domain:
+                    # Create user in AD
+                    user = domain.create_user(
+                        username=form.cleaned_data['username'],
+                        password=form.cleaned_data['password'],
+                        first_name=form.cleaned_data['first_name'],
+                        last_name=form.cleaned_data['last_name'],
+                        email=form.cleaned_data['email'],
+                        department=form.cleaned_data['department']
+                    )
+
+                    # Log the action
+                    AuditLog.objects.create(
+                        action='CREATE',
+                        actor=request.user,
+                        target_type='user',
+                        target_name=form.cleaned_data['username'],
+                        details=f"User created: {form.cleaned_data['username']}"
+                    )
+
+                messages.success(request, f"User {form.cleaned_data['username']} created successfully!")
+                return redirect('user_list')
+            except Exception as e:
+                messages.error(request, f"Error creating user: {str(e)}")
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'ad_manager/user_form.html', {'form': form, 'action': 'Create'})
+
+@login_required
+def user_modify(request, username):
+    """View to modify existing AD user"""
+    with ADConnection() as domain:
+        ad_user = domain.find_user(username)
+        if not ad_user:
+            messages.error(request, f"User {username} not found!")
+            return redirect('user_list')
+
+        if request.method == 'POST':
+            form = UserModificationForm(request.POST)
+            if form.is_valid():
+                try:
+                    # Update user in AD
+                    ad_user.update(
+                        first_name=form.cleaned_data['first_name'],
+                        last_name=form.cleaned_data['last_name'],
+                        email=form.cleaned_data['email'],
+                        department=form.cleaned_data['department']
+                    )
+
+                    # Log the action
+                    AuditLog.objects.create(
+                        action='MODIFY',
+                        actor=request.user,
+                        target_type='user',
+                        target_name=username,
+                        details=f"User modified: {username}"
+                    )
+
+                    messages.success(request, f"User {username} updated successfully!")
+                    return redirect('user_list')
+                except Exception as e:
+                    messages.error(request, f"Error updating user: {str(e)}")
+        else:
+            # Pre-fill form with current user data
+            form = UserModificationForm(initial={
+                'first_name': ad_user.first_name,
+                'last_name': ad_user.last_name,
+                'email': ad_user.email,
+                'department': ad_user.department
+            })
+
+    return render(request, 'ad_manager/user_form.html', {
+        'form': form, 
+        'action': 'Modify',
+        'username': username
+    })
+
+@login_required
+def user_reset_password(request, username):
+    """View to reset user password"""
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        try:
+            with ADConnection() as domain:
+                user = domain.find_user(username)
+                if user:
+                    user.set_password(new_password)
+                    
+                    # Log the action
+                    AuditLog.objects.create(
+                        action='PASSWORD',
+                        actor=request.user,
+                        target_type='user',
+                        target_name=username,
+                        details="Password reset performed"
+                    )
+                    
+                    messages.success(request, f"Password reset successful for user {username}")
+                else:
+                    messages.error(request, f"User {username} not found!")
+        except Exception as e:
+            messages.error(request, f"Error resetting password: {str(e)}")
+        
+        return redirect('user_list')
+
+    return render(request, 'ad_manager/reset_password.html', {'username': username})
+
+@login_required
+def audit_log(request):
+    """View to display audit logs"""
+    logs = AuditLog.objects.all()
+    paginator = Paginator(logs, 50)
+    page = request.GET.get('page')
+    logs = paginator.get_page(page)
     
-#     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    return render(request, 'ad_manager/audit_log.html', {'logs': logs})
