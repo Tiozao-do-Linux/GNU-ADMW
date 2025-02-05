@@ -1,0 +1,1 @@
+# This directory contains global templates for all applications.
