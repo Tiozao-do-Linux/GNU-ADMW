@@ -53,17 +53,17 @@ dn_group = group.distinguished_name
 print(f'# Verify monica_user is a member of "{AD_GROUP_CAN_LOGIN}"')
 if all_groups:
     if dn_group in all_groups:
-        print(f'## Monica User is a member of "{AD_GROUP_CAN_LOGIN}"')
+        print(f'## monica User is a member of "{AD_GROUP_CAN_LOGIN}"')
         try:
-            print(f'# Try Login into AD as monica_user')
+            print(f'# Try Login into AD as monica User')
             monica_session = domain.create_session_as_user(user=dn_user, password=AD_ADMIN_PASSWORD)
             print(f'# Login Successfully')
         except Exception as e:
             print(f'# Login Failed')
             print(f'## Error: {str(e)}')
     else:
-        print(f'## Monica User is NOT a member of "{AD_GROUP_CAN_LOGIN}"')
+        print(f'## monica User is NOT a member of "{AD_GROUP_CAN_LOGIN}"')
 else:
-    print(f'## Monica User is NOT a member of any groups')
+    print(f'## monica User is NOT a member of any groups')
 
 
