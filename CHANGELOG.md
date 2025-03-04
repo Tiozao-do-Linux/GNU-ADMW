@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.8] - 2025-03-03
+
+### Added/Changed/Removed
+- After reading a lot about https://learndjango.com/courses/django-for-beginners/, I'm starting to understand this Django thing better.
+- separate .env file configuration
+- teste-active-directory.py better code
+- templates dir updates with new registrations files
+- authentication now works with LDAP/AD
+- visual improvements in templates
+
 ## [0.0.7] - 2025-02-01
 
 ### Added/Changed/Removed

@@ -1,28 +1,8 @@
 from pathlib import Path
-
-from dotenv import load_dotenv
-load_dotenv()
-from decouple import config, Csv
+from .config import ENV
 
 # Basedir
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Retrieve the configuration parameters from .env:
-ENV = {
-        'AD_DOMAIN': config('AD_DOMAIN',default='yourdomain.com'),
-        'AD_SERVER': config('AD_SERVER', default='ldaps://ip-or-dnsname'),
-        'AD_ADMIN_USER': config('AD_ADMIN_USER', default='admin@yourdomain.com'),
-        'AD_ADMIN_PASSWORD': config('AD_ADMIN_PASSWORD', default='password-of-admin'),
-        'AD_USER_ATTRS': config('AD_USER_ATTRS', default=[], cast=Csv()),
-        'AD_GROUP_ATTRS': config('AD_GROUP_ATTRS', default=[], cast=Csv()),
-        'AD_GROUP_CAN_LOGIN': config('AD_GROUP_CAN_LOGIN', default='Login AD Group'),
-        'SECRET_KEY': config('SECRET_KEY',default='your-secret-key-here'),
-        'DEBUG': config('DEBUG',default=False, cast=bool),
-        'ALLOWED_HOSTS': config('ALLOWED_HOSTS', default=['*'], cast=Csv()),
-        'CSRF_TRUSTED_ORIGINS' : config('CSRF_TRUSTED_ORIGINS', default=['https://'], cast=Csv()),
-        'DATABASE_URL': config('DATABASE_URL',default=None),
-        'TIME_ZONE': config('TIME_ZONE',default='America/Campo_Grande'),
-}
 
 SECRET_KEY = ENV['SECRET_KEY']
 
@@ -42,11 +22,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 3rd Party
     'crispy_forms',
     'crispy_bootstrap5',
+    # Local
+    'accounts',
     'directory',
- 
 ]
+
+# Auth model user
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,14 +114,25 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 #LOGIN_URL = 'login'
-#LOGIN_REDIRECT_URL = 'dashboard'
-#LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'about'
+LOGOUT_REDIRECT_URL = 'home'
+
+# Enable Password Reset via Email
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Production settings
-if not DEBUG:
+if DEBUG:
+    # Enable logging LDAPBackend for debug to console
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {"console": {"class": "logging.StreamHandler"}},
+        "root": {"handlers": ["console"], "level": "DEBUG"},
+    }
+else:
+    # Production settings
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
@@ -146,3 +142,12 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Auth LDAP settings
+from core.auth_ldap import *
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend', # This is required for fallback
+)
+

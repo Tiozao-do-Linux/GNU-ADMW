@@ -5,32 +5,35 @@
 {% block subtitle %} - {% trans 'About Page' %}{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-	<h1>{% trans 'About Page' %}</h1>
+<div class="container mt-3">
+	<h1 class="display-6">{% trans 'About Page' %}</h1>
 	<hr>
-  </div>
-
-<div class="container-fluid bg-1 text-center">
-	<h2>What is GNU-ADMW?</h2>
-	<img src="{% static 'img/active-directory.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
-	<h2>GNU-ADMW is an Active Directory Management Web</h2>
 </div>
-<hr>
-<div class="container mt-3 text-bg-light border border-danger rounded-4 shadow-lg">
-	<fieldset><legend>Active Directory Settings:</legend>
-		<p>Settings of Active Directory are read from <span class="text-bg-danger">.env</span> file at {{ now }}</p>
-		<p>Domain Name: {{ ad_domain }}</p>
-		<p>Domain Server: {{ ad_server }}</p>
-		<p>Domain User Admin: {{ ad_admin_user }}</p>
-		<p>Domain User Attrs: {{ ad_user_attrs }}</p>
-		<p>Domain Group Attrs: {{ ad_group_attrs }}</p>
-		<p>Domain Group Can Login: {{ ad_group_can_login }}</p>
+
+<div class="container mt-3 text-center">
+	<img src="{% static 'img/active-directory.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="200">
+	<h2 class="display-6">GNU-ADMW is an Active Directory Management Web</h2>
+	<hr>
+</div>
+
+<div class="container mt-3">
+	<fieldset disabled class="border rounded-3 p-3">
+		<legend class="float-none w-auto px-3">Active Directory Settings:</legend>
+		<table class="table table-striped">
+			<thead>
+			  <tr><th>Object</th><th>Value</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Settings of Active Directory:</td><td>are read from .env file at {{ now }}</td>
+				<tr><td>Domain Name:</td><td>{{ ad_domain }}</td>
+				<tr><td>Domain Server:</td><td>{{ ad_server }}</td>
+				<tr><td>Domain User Admin:</td><td>{{ ad_admin_user }}</td>
+				<tr><td>Domain User Attrs:</td><td>{{ ad_user_attrs }}</td>
+				<tr><td>Domain Group Attrs:</td><td>{{ ad_group_attrs }}</td>
+				<tr><td>Domain Group Required:</td><td>{{ ad_group_required }}</td>
+				<tr><td>Domain Group Denied:</td><td>{{ ad_group_deny }}</td>
+			</tbody>
+		</table>
 	</fieldset>
 </div>
-<div class="container-fluid bg-grey text-center">
-	<h2>Our Values</h2>
-	<h4><strong>MISSION:</strong> Our mission lorem ipsum..</h4>      
-	<p><strong>VISION:</strong> Our vision Lorem ipsum..
-</div>
-
 {% endblock %}

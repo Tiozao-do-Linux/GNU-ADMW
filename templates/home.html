@@ -5,16 +5,18 @@
 {% block subtitle %} - {% trans 'Home Page' %}{% endblock %}
 
 {% block content %}
-	<div class="jumbotron">
-		<h1>{% trans 'Home Page' %}</h1>
-		<hr>
-  	</div>
-
-	<div class="container-fluid bg-1 text-center">
-		<h2>Who Am I?</h2>
-		<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="400">
-		<h2>I'm a Linux uncle who likes to share knowledge.</h2>
+	<div class="container">
+		<h1 class="display-6">{% trans 'Home Page' %}</h1>
 		<hr>
 	</div>
 
+	<div class="container-fluid bg-1 text-center">
+		<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="200">
+		<hr>
+	</div>
+	
+	<div class="container mt-3 text-center">
+		<p class="h6"><abbr title="Tiozão do Linux - I'm a old Linux user who like share knowledge with others." class="initialism">Who Am I</abbr></p>
+		<hr>
+	</div>
 {% endblock %}
