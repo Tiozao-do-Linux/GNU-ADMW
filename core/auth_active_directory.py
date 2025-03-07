@@ -30,11 +30,6 @@ class ActiveDirectoryBackend(BaseBackend):
             return None
 
         # Find user by sAMAccountName
-            # #map ldap attributes to Django user fields
-            # 'username': 'sAMAccountName',
-            # 'first_name': 'givenName',
-            # 'last_name': 'sn',
-            # 'email': 'mail',
         try:
             user_ad = session.find_user_by_sam_name(username, ['sAMAccountName','givenName','sn','mail','userPrincipalName'])
         except Exception as e:
@@ -43,6 +38,16 @@ class ActiveDirectoryBackend(BaseBackend):
         else:
             print(f'## user_ad: {user_ad}')
 
+        # Get attributes from AD
+            # #map ldap attributes to Django user fields
+            # 'username': 'sAMAccountName',
+            # 'first_name': 'givenName',
+            # 'last_name': 'sn',
+            # 'email': 'mail',
+        givenName = user_ad.get('givenName')
+        sn = user_ad.get('sn')
+        mail = user_ad.get('mail')
+
         if not user_ad:
             return None
 
@@ -50,34 +55,26 @@ class ActiveDirectoryBackend(BaseBackend):
         try:
             user_session = domain.create_session_as_user(user=user_ad.get('userPrincipalName'), password=password)
         except Exception as e:
-            print(f'## Error: {username} {password} - {str(e)}')
+            print(f'## Error: {username} - {str(e)}')
             return None
 
         if not user_session.is_authenticated():
             return None
 
-
         # Create or retrieve user
         user, created = User.objects.get_or_create(username=username)
         if created:
-            # user.first_name = user_ad.get('givenName')
-            # user.last_name = user_ad.get('sn')
-            # user.email = user_ad.get('mail')
             # # user.is_staff = True
             # # user.is_superuser = False
             # # user.is_active = True
             user.set_unusable_password()  # User is managed by AD, not by Django.
-            user.save()
-        else:
-            # Always update user attributes
-            # user.set_password(password)
-            # user.is_staff = True
-            # user.is_superuser = False
-            # user.is_active = True
-            # user.first_name = user_ad.get('givenName')
-            # user.last_name = user_ad.get('sn')
-            # user.email = user_ad.get('mail')
-            user.save()
+
+        # Always Update user attributes from AD
+        if givenName: user.first_name = givenName
+        if sn: user.last_name = sn
+        if mail: user.email = mail
+        user.save()
+
         return user
 
     def get_user(self, user_id):
