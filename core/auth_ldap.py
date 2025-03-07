@@ -1,6 +1,6 @@
 ## LDAP Autentication
-import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+#import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, ldap
 
 from core.settings import ENV
 
@@ -18,7 +18,7 @@ AUTH_LDAP_USER_ATTR_MAP = {
 }
 # Where to find the users
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'DC=tiozaodolinux,DC=com', # LDAP search base
+    'DC=grupoimagetech,DC=com,DC=br', # LDAP search base
     ldap.SCOPE_SUBTREE, # Scope
     '(sAMAccountName=%(user)s)', # LDAP search filter
 )
@@ -36,16 +36,16 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 
-# Simple group restrictions
-AUTH_LDAP_REQUIRE_GROUP = "CN=Turma da Monica,CN=Users,DC=tiozaodolinux,DC=com"
-AUTH_LDAP_DENY_GROUP = "CN=Disabled,CN=Users,DC=tiozaodolinux,DC=com"
+# # Simple group restrictions
+# AUTH_LDAP_REQUIRE_GROUP = "CN=Turma da Monica,CN=Users,DC=grupoimagetech,DC=com,DC=br"
+# AUTH_LDAP_DENY_GROUP = "CN=Disabled,CN=Users,DC=grupoimagetech,DC=com,DC=br"
 
-# Define flags by group in LDAP
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    #"is_active": "CN=active,OU=django,OU=groups,DC=tiozaodolinux,DC=com",
-    "is_staff": "CN=Turma da Monica,CN=Users,DC=tiozaodolinux,DC=com",
-    #"is_superuser": "CN=superuser,OU=django,OU=groups,DC=tiozaodolinux,DC=com",
-}
+# # Define flags by group in LDAP
+# AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+#     #"is_active": "CN=active,OU=django,OU=groups,DC=grupoimagetech,DC=com,DC=br",
+#     "is_staff": "CN=Turma da Monica,CN=Users,DC=grupoimagetech,DC=com,DC=br",
+#     #"is_superuser": "CN=superuser,OU=django,OU=groups,DC=grupoimagetech,DC=com,DC=br",
+# }
 
 # This is the default, but I like to be explicit.
 AUTH_LDAP_ALWAYS_UPDATE_USER = True

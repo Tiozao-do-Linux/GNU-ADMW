@@ -146,8 +146,9 @@ else:
 # Auth LDAP settings
 from core.auth_ldap import *
 
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
+AUTHENTICATION_BACKENDS = [
+    'core.auth_active_directory.ActiveDirectoryBackend',
+    #'django_auth_ldap.backend.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend', # This is required for fallback
-)
+]
 

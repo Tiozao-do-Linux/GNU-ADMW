@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from decouple import config, Csv
 
 # Retrieve the configuration parameters from .env:
