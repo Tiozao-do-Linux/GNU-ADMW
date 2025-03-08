@@ -65,7 +65,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# Database
+# Database definition
 if ENV['DATABASE_URL']:
     DATABASES = {
         'default': ENV['DATABASE_URL']
@@ -124,7 +124,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
-    # Enable logging LDAPBackend for debug to console
+    # Enable logging for debug to console
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -143,12 +143,9 @@ else:
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Auth LDAP settings
-from core.auth_ldap import *
-
+# Allow authentication through Active Directory
 AUTHENTICATION_BACKENDS = [
     'core.auth_active_directory.ActiveDirectoryBackend',
-    #'django_auth_ldap.backend.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend', # This is required for fallback
 ]
 

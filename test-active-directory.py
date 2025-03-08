@@ -5,10 +5,6 @@ import json
 # Install with 'pip install ms_active_directory'
 from ms_active_directory import ADDomain
 
-# https://github.com/zorn96/ms_active_directory/blob/main/ms_active_directory/environment/ldap/ldap_format_utils.py
-from ms_active_directory.environment.ldap.ldap_format_utils import *
-
-
 def print_AD_Object(object):
     if object:
         object = vars(object)
@@ -19,10 +15,10 @@ def print_AD_Object(object):
         print(json.dumps(dict(object['all_attributes']), ensure_ascii=False, indent=3))
         print(f'-'*80)
 
-print(f'# Retrieve the configuration parameters:')
-print(f'-'*80)
-pprint(ENV)
-print(f'-'*80)
+# print(f'# Retrieve the configuration parameters:')
+# print(f'-'*80)
+# pprint(ENV)
+# print(f'-'*80)
 
 AD_DOMAIN = ENV['AD_DOMAIN']
 AD_SERVER = ENV['AD_SERVER']
@@ -31,11 +27,7 @@ AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
 AD_USER_ATTRS = ENV['AD_USER_ATTRS'] 
 AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 AD_GROUP_REQUIRED = ENV['AD_GROUP_REQUIRED']
-AD_GROUP_DENY = ENV['AD_GROUP_DENY']
-
-x = construct_ldap_base_dn_from_domain(AD_DOMAIN)
-print(f'ldap_base_dn_from_domain("{AD_DOMAIN}"): {x}')
-
+AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
 
 try:
     print(f'# Connect with {AD_DOMAIN} at {AD_SERVER} with user {AD_ADMIN_USER}')

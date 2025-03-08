@@ -20,8 +20,11 @@ env_context = {
     'ad_admin_user' : ENV['AD_ADMIN_USER'],
     'ad_user_attrs' : ENV['AD_USER_ATTRS'],
     'ad_group_attrs' : ENV['AD_GROUP_ATTRS'],
+    'ad_base' : ENV['AD_BASE'],
+    'ad_base_user' : ENV['AD_BASE_USER'],
+    'ad_base_group' : ENV['AD_BASE_GROUP'],
     'ad_group_required' : ENV['AD_GROUP_REQUIRED'],
-    'ad_group_deny' : ENV['AD_GROUP_DENY'],
+    'ad_group_denied' : ENV['AD_GROUP_DENIED'],
     'now' : timezone.now(),
 }
 

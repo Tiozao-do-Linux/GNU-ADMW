@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.9]  2025-03-08
+
+### Added/Changed/Removed
+- Remove auth_ldap.py
+- Improvements in env.example
+- Create auth_active_directory.py with required_group and denied_group in login with debug log
+- Enable ActiveDirectoryBackend in settings
+- Adjust template about.html
+- Create test-ldap_format_utils.py with examples
+
 ## [0.0.8] - 2025-03-03
 
 ### Added/Changed/Removed

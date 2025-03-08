@@ -27,11 +27,14 @@
 				<tr><td>Settings of Active Directory:</td><td>are read from .env file at {{ now }}</td>
 				<tr><td>Domain Name:</td><td>{{ ad_domain }}</td>
 				<tr><td>Domain Server:</td><td>{{ ad_server }}</td>
-				<tr><td>Domain User Admin:</td><td>{{ ad_admin_user }}</td>
-				<tr><td>Domain User Attrs:</td><td>{{ ad_user_attrs }}</td>
-				<tr><td>Domain Group Attrs:</td><td>{{ ad_group_attrs }}</td>
-				<tr><td>Domain Group Required:</td><td>{{ ad_group_required }}</td>
-				<tr><td>Domain Group Denied:</td><td>{{ ad_group_deny }}</td>
+				<tr><td>User Admin:</td><td>{{ ad_admin_user }}</td>
+				<tr><td>User Attrs:</td><td>{{ ad_user_attrs }}</td>
+				<tr><td>Group Attrs:</td><td>{{ ad_group_attrs }}</td>
+				<tr><td>DN Base:</td><td>{{ ad_base }}</td>
+				<tr><td>DN Base User:</td><td>{{ ad_base_user }}</td>
+				<tr><td>DN Base Group:</td><td>{{ ad_base_group }}</td>
+				<tr><td>Group Required:</td><td>{{ ad_group_required }}</td>
+				<tr><td>Group Denied:</td><td>{{ ad_group_denied }}</td>
 			</tbody>
 		</table>
 	</fieldset>

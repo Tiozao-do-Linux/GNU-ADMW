@@ -13,11 +13,12 @@ ENV = {
         'AD_USER_ATTRS': config('AD_USER_ATTRS', default=[], cast=Csv()),
         'AD_GROUP_ATTRS': config('AD_GROUP_ATTRS', default=[], cast=Csv()),
 
-        'AD_SEARCH_BASE': config('AD_SEARCH_BASE', default='DC=yourdomain,DC=com'),
-        'AD_SEARCH_USER': config('AD_SEARCH_USER', default='OU=Users,DC=yourdomain,DC=com'),
-        'AD_SEARCH_GROUP': config('AD_SEARCH_GROUP', default='OU=Groups,DC=yourdomain,DC=com'),
+        'AD_BASE': config('AD_BASE', default='DC=yourdomain,DC=com'),
+        'AD_BASE_USER': config('AD_BASE_USER', default='OU=Users,DC=yourdomain,DC=com'),
+        'AD_BASE_GROUP': config('AD_BASE_GROUP', default='OU=Groups,DC=yourdomain,DC=com'),
+
         'AD_GROUP_REQUIRED': config('AD_GROUP_REQUIRED', default='CN=Turma da Monica,CN=Groups,DC=yourdomain,DC=com'),
-        'AD_GROUP_DENY': config('AD_GROUP_DENY', default='CN=Deny,OU=Groups,DC=yourdomain,DC=com'),
+        'AD_GROUP_DENIED': config('AD_GROUP_DENIED', default='CN=Deny,OU=Groups,DC=yourdomain,DC=com'),
 
         'SECRET_KEY': config('SECRET_KEY',default='your-secret-key-here'),
         'DEBUG': config('DEBUG',default=False, cast=bool),
