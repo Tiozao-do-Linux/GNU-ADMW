@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enable ActiveDirectoryBackend in settings
 - Adjust template about.html
 - Create test-ldap_format_utils.py with examples
+- Display Active Directory User after login in about.html
+- Better README with examples
 
 ## [0.0.8] - 2025-03-03
 

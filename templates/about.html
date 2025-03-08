@@ -9,6 +9,14 @@
 	<h1 class="display-6">{% trans 'About Page' %}</h1>
 	<hr>
 </div>
+{% if user.is_authenticated %}
+<div class="container mt-3">
+	<pre class="h5">
+		Logged as {{ user.username }} - {{ user.first_name }} {{ user.last_name }} - {{ user.email }}
+	</pre>
+	<hr>
+</div>
+{% endif %}
 
 <div class="container mt-3 text-center">
 	<img src="{% static 'img/active-directory.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="200">

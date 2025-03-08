@@ -35,11 +35,14 @@ python -m venv .venv
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Or install each one
+pip install django ms_active_directory python-decouple python-dotenv crispy-bootstrap5 django-crispy-forms
 ```
 
 ## Setup Environment
 
-Copy the env.example file to .env and udpate the settings to match your environment.
+Copy the env.example file to .env
 
 ```sh
 cp env.example .env
@@ -49,8 +52,27 @@ cp env.example .env
 
 ### Config .env
 
-```sh
-python test-config-env.py
+Udpate the settings to match your environment
+
+```
+# Active Directory config
+AD_DOMAIN='seudominio.com.br'                       # your domain name
+AD_SERVER='ldaps://dc01.${AD_DOMAIN}'               # your server in format ldap:// (without secure) or ldaps:// (with secure)
+AD_ADMIN_USER='Administrator@${AD_DOMAIN}'          # you can use the userPrincipalName instead of the DN of the empowered user to change your AD
+AD_ADMIN_PASSWORD='SuperSecretPassword@2024'        # your password
+
+# CSV list attrs
+AD_USER_ATTRS='cn,sn,title,description,physicalDeliveryOfficeName,telephoneNumber,givenName,displayName,department,company,name,sAMAccountName,userPrincipalName,mail,loginShell,objectGUID,objectSid'
+AD_GROUP_ATTRS='cn,sn,description,name,sAMAccountName,member,objectGUID,objectSid'
+
+# Base search
+AD_BASE='DC=seudominio,DC=com,DC=br'                # your DN base
+AD_BASE_USER='CN=Users,${AD_BASE}'                  # your DN base user
+AD_BASE_GROUP='CN=Groups,${AD_BASE}'                # your DN base group
+
+# Group restrictions
+AD_GROUP_REQUIRED='CN=Turma da Monica,${AD_BASE_USER}'  # your DN group with the user MUST be in
+AD_GROUP_DENIED='CN=Disabled,${AD_BASE_GROUP}'          # your DN group with the user NOT may be in
 ```
 
 ### Connection to Active Directory
@@ -144,10 +166,23 @@ OBJECT DN: CN=Turma da Monica,CN=Users,DC=tiozaodolinux,DC=com
 ```sh
 
 python manage.py makemigrations
+
 python manage.py migrate
 
-python manage.py createsuperuser
+export DJANGO_SUPERUSER_PASSWORD=SuperSecretPassword@2024
+
+python manage.py createsuperuser --username djangoadmin --email djangoadmin@seudominio.com.br --noinput
 
 python manage.py runserver
 
 ```
+
+### Testing
+
+Starting development server at http://127.0.0.1:8000/
+
+Try logging in with your **Active Directory User** that belongs to the **Required Group** and not to the **Denied Group**
+
+Check the logs in the console
+
+
