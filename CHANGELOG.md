@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.10] - 2025-03-09
+
+### Added/Changed/Removed
+- Change Settings DEBUG
+- Improve auth_active_directory.py get_user_model
+- Enable URL to users/list - work, but not final
+- Find users and groups in test-active-directory.py
+
 ## [0.0.9]  2025-03-08
 
 ### Added/Changed/Removed

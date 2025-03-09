@@ -15,7 +15,6 @@
                     <th>Username</th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,44 +22,14 @@
                 {% for user in object_list %}
                 <tr>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.given_name }} {{ user.surname }}</td>
+                    <td>{{ user.full_name }}</td>
                     <td>{{ user.email }}</td>
-                    <td>
-                        {% if user.enabled %}
-                        <span class="badge bg-success">Active</span>
-                        {% else %}
-                        <span class="badge bg-danger">Disabled</span>
-                        {% endif %}
-                    </td>
                     <td>
                         <div class="btn-group">
                             <a href="{ % url 'user_detail' user.username %}" class="btn btn-sm btn-info">Edit</a>
-                            <a href="{ % url 'password_reset' user.username %}" class="btn btn-sm btn-warning">Reset Password</a>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.username }}">Delete</button>
                         </div>
                     </td>
                 </tr>
-                <!-- Delete Modal -->
-                <div class="modal fade" id="deleteModal{{ user.username }}" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Confirm Delete</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to delete user {{ user.username }}?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form action="{ % url 'user_delete' user.username %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">No users found</td>

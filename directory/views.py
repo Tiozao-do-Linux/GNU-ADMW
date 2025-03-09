@@ -11,9 +11,6 @@ from core.settings import ENV
 #from .models import ADUser, ADGroup, AuditLog
 from .forms import UserCreationForm, UserModificationForm
 
-# import logging
-# logger = logging.getLogger(__name__)
-
 env_context = {
     'ad_domain' : ENV['AD_DOMAIN'],
     'ad_server' : ENV['AD_SERVER'],
@@ -72,12 +69,26 @@ class HelpPageView(TemplateView):
 # User Management Views
 class UserListView(ListView):
     template_name = 'users/list.html'
-    #model = ADUser
-    paginate_by = 100 # if pagination is desired
-    # object_list -> ADUser.objects.all()
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    context_object_name = 'users'   # variable name used in template
+    def get_queryset(self):
+        #TODO : Get users from AD in a better way
+
+        ad = ADDomain(ENV['AD_DOMAIN'], ldap_servers_or_uris=[ENV['AD_SERVER']], discover_kerberos_servers=False, discover_ldap_servers=False)
+        session = ad.create_session_as_user(user=ENV['AD_ADMIN_USER'], password=ENV['AD_ADMIN_PASSWORD'])
+
+        #users = ad.get_all_users()  # ADUser.objects.all()
+        users = session.find_users_by_common_name('*', ['sAMAccountName','givenName','sn','mail'])
+        # Create list with some attributes
+        
+        user_list = [
+            {
+                'username': user.get('sAMAccountName'),
+                'full_name': f"{user.get('givenName')} {user.get('sn')}",
+                'email': user.get('mail'),
+            }
+            for user in users
+        ]
+        return user_list
 
 class GroupListView(ListView):
     template_name = 'groups/list.html'

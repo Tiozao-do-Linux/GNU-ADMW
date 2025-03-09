@@ -5,7 +5,9 @@ urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
     path('about/', AboutPageView.as_view(), name='about'),
     path('help/', HelpPageView.as_view(), name='help'),
-    
+
+    path('users/', UserListView.as_view(), name='user_list'),
+
 #    path('login/', LoginView.as_view(), name='login'),
 #    path('logout/', LogoutView.as_view(), name='logout'),
 

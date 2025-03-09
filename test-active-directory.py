@@ -10,7 +10,7 @@ def print_AD_Object(object):
         object = vars(object)
         distinguishedName = object['distinguished_name']
         print(f'='*80)
-        print(f'OBJECT DN:'.ljust(10,'.'),f'{distinguishedName}')
+        print(f'OBJECT DN: {distinguishedName}')
         print(f'='*80)
         print(json.dumps(dict(object['all_attributes']), ensure_ascii=False, indent=3))
         print(f'-'*80)
@@ -89,4 +89,31 @@ else:
     else:
         print(f'# {USER} is NOT a member of any groups')
 
+# Now find users and groups
+USERS='c*'
+print(f'# Find users by commonName="{USERS}"')
+users = session.find_users_by_common_name(USERS, ['memberOf'] )
+if not users:
+    print(f'## Users "{USERS}" NOT found')
+else:
+    for user in users:
+        print_AD_Object(user)
 
+GROUPS='Turma*'
+print(f'# Find groups by commonName="{GROUPS}"')
+groups = session.find_groups_by_common_name(GROUPS, ['member'])
+if not groups:
+    print(f'## Groups "{GROUPS}" NOT found')
+else:
+    for group in groups:
+        print_AD_Object(group)
+
+# from core.auth_active_directory import ConnectActiveDirectory
+# ad = ConnectActiveDirectory(AD_DOMAIN, AD_SERVER, AD_ADMIN_USER, AD_ADMIN_PASSWORD)
+# Mask_Users='c*'
+# users = ad.get_users(Mask_Users)
+# if not users:
+#     print(f'## Users "{Mask_Users}" NOT found')
+# else:
+#     for user in users:
+#         print_AD_Object(user)

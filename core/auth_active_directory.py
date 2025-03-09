@@ -1,14 +1,15 @@
-##from django.contrib.auth.models import User
+"""
+This module uses only ms-active-directory to interact to Active Directory
+"""
+
 from django.contrib.auth import get_user_model
-User = get_user_model()
+#User = get_user_model()
 
-from django.contrib.auth.backends import BaseBackend
-
-from ms_active_directory import ADDomain, logging_utils
+from ms_active_directory import ADDomain, ADUser, ADGroup, logging_utils
 
 logger = logging_utils.get_logger()
 
-from .config import ENV
+from core.config import ENV
 
 # Minimal configuration for Active Directory
 AD_DOMAIN = ENV['AD_DOMAIN']
@@ -17,14 +18,36 @@ AD_ADMIN_USER = ENV['AD_ADMIN_USER']
 AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
 AD_GROUP_REQUIRED = ENV['AD_GROUP_REQUIRED']
 AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
-#AD_USER_ATTRS = ENV['AD_USER_ATTRS']
-#AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
+AD_USER_ATTRS = ENV['AD_USER_ATTRS']
+AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 
+from django.contrib.auth.backends import BaseBackend
 
 class ActiveDirectoryBackend(BaseBackend):
+    """
+    The main backend class. This implements the auth backend API, although it
+    actually delegates most of its work to ADUser and ADGroup
+    """
+
+    def get_user_model(self):
+        """
+        By default, this will return the model class configured by
+        AUTH_USER_MODEL. Subclasses may wish to override it and return a proxy
+        model.
+        """
+        return get_user_model()
+    
     def authenticate(self, request, username=None, password=None):
+        """
+        Returns an authenticated Django user or None
+        """
+
+        if username is None or password is None:
+            logger.critical('## Auth Error ##: Missing username or password')
+            return None
+
         try:
-            # Connect to Active Directory
+            # Connect to Active Directory without discover by DNS
             domain = ADDomain(AD_DOMAIN, ldap_servers_or_uris=[AD_SERVER], discover_kerberos_servers=False, discover_ldap_servers=False)
             # Authenticate with account service with admin rights
             session = domain.create_session_as_user(user=AD_ADMIN_USER, password=AD_ADMIN_PASSWORD)
@@ -82,7 +105,9 @@ class ActiveDirectoryBackend(BaseBackend):
                     return None
 
                 # Create or retrieve user
-                user, created = User.objects.get_or_create(username=username)
+                user, created = self.get_user_model().objects.get_or_create(username=username)
+
+                #user, created = User.objects.get_or_create(username=username)
                 if created:
                     # # user.is_staff = True
                     # # user.is_superuser = False
@@ -106,7 +131,50 @@ class ActiveDirectoryBackend(BaseBackend):
             return None
 
     def get_user(self, user_id):
+        user = None
+
         try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
+            user = self.get_user_model().objects.get(pk=user_id)
+        except user.ObjectDoesNotExist:
+            pass
+
+        return user
+
+class ConnectActiveDirectory:
+    def __init__(self, domain: str, server: str, user: str, password:str):
+        self.domain = domain
+        self.server = server
+        self.user = user
+        self.password = password
+        try:
+            # Connect to Active Directory without discover by DNS
+            self.domain = ADDomain(self.domain, ldap_servers_or_uris=self.server, discover_kerberos_servers=False, discover_ldap_servers=False)
+            # Authenticate with account service with admin rights
+            self.session = self.domain.create_session_as_user(user=self.user, password=self.password)
+        except Exception as e:
+            logger.critical(f'## Auth Error ##: {self.user} - {str(e)}')
+            self.session = None
+
+    def __str__(self):
+        return f"{self.domain} - {self.server} - {self.user}"
+    
+    def get_session(self):
+        return self.session
+
+    def get_domain(self):
+        return self.domain
+
+    def get_users(self, mask_users: str):
+        users = None
+        print(f'# Find Users by commonName="{mask_users}"')
+        users = self.session.find_users_by_common_name(mask_users, ['memberOf'] )
+        print(f'# Found {len(users)} Users')
+        return users
+        
+    def get_groups(self, mask_groups: str):
+        groups = None
+        print(f'# Find Groups by commonName="{mask_groups}"')
+        groups = self.session.find_groups_by_common_name(mask_groups, ['member'] )
+        print(f'# Found {len(groups)} Groups')
+        return groups
+    

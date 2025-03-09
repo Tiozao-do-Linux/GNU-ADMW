@@ -126,10 +126,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if DEBUG:
     # Enable logging for debug to console
     LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {"console": {"class": "logging.StreamHandler"}},
-        "root": {"handlers": ["console"], "level": "DEBUG"},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': { 'verbose': { 'format': '{levelname} {asctime} {module} {message}', 'style': '{', }, },
+    'handlers': { 'console': { 'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'verbose', }, },
+    'loggers': { 'django': { 'handlers': ['console'], 'level': 'INFO', }, 
+    'root': { 'handlers': ['console'], 'level': 'DEBUG', }, },
     }
 else:
     # Production settings
