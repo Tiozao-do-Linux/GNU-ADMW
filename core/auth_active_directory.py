@@ -116,8 +116,8 @@ class ActiveDirectoryBackend(BaseBackend):
 
                 # Always Update user attributes from AD
                 if givenName: user.first_name = givenName
-                if sn: user.last_name = sn
-                if mail: user.email = mail
+                if sn:        user.last_name = sn
+                if mail:      user.email = mail
                 user.save()
 
                 #logger.info(f"Auth User: {user.username}")
