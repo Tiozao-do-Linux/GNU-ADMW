@@ -30,10 +30,6 @@ env_context = {
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
-    extra_context = env_context
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
 
 class AboutPageView(TemplateView):
     template_name = 'about.html'
@@ -45,10 +41,6 @@ class AboutPageView(TemplateView):
 
 class HelpPageView(TemplateView):
     template_name = 'help.html'
-    # extra_context = env_context
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
 
 # class LoginView(TemplateView):
 #     template_name = 'login.html'
@@ -56,11 +48,11 @@ class HelpPageView(TemplateView):
 #     #     context = super().get_context_data(**kwargs)
 #     #     return context
 
-# class LogoutView(TemplateView):
-#     template_name = 'logout.html'
-#     # def get_context_data(self, **kwargs):
-#     #     context = super().get_context_data(**kwargs)
-#     #     return context
+class LogoffView(TemplateView):
+    template_name = 'logoff.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 
 ## List Views

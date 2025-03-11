@@ -128,8 +128,13 @@ if DEBUG:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
-        'formatters': { 'verbose': { 'format': '{levelname} {asctime} {module} {message}', 'style': '{', }, },
-        'handlers': { 'console': { 'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'verbose', }, },
+        'formatters': { 
+            #'verbose': { 'format': '[{asctime}] {levelname} {module} {message}', 'style': '{', },
+            'verbose': { 'format': "[%(asctime)s] %(levelname)-7s [%(name)s %(module)s:%(lineno)s ] %(message)s", 'datefmt': "%d/%b/%Y %H:%M:%S" },
+            'simple': { 'format': '%(levelname)s %(message)s' },
+            'custom': { 'format': "[%(asctime)s] %(levelname)-7s %(message)s", 'datefmt': "%d/%b/%Y %H:%M:%S" },
+        },
+        'handlers': { 'console': { 'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'custom', }, },
         'loggers': { 
             #'django': { 'handlers': ['console'], 'level': 'INFO', }, 
             'root': { 'handlers': ['console'], 'level': 'DEBUG', },

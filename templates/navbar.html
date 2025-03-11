@@ -21,6 +21,7 @@
           <span class="navbar-text me-3">
               Logged as: {{ user.username }}
           </span>
+          <a href="{% url 'logoff' %}" class="btn btn-outline-light"><i class="fa fa-fw fa-power-off"></i> Log Off</a>
           <form action="{% url 'logout' %}" method="post">{% csrf_token %}
             <button type="submit" class="btn btn-outline-light"><i class="fa fa-fw fa-power-off"></i> Log Out</button>
           </form>
