@@ -25,3 +25,6 @@ __pycache__
 db.sqlite3
 media
 
+# Mac only
+.DS_Store
+
