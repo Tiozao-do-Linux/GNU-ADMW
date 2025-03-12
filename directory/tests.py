@@ -1,3 +1,7 @@
+"""
+To write unit tests in Django we use TestCase which is, 
+itself, an extension of Python’s TestCase.
+"""
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
@@ -23,3 +27,20 @@ class CustomUserTests(TestCase):
         self.assertTrue(admin_user.is_active)
         self.assertTrue(admin_user.is_staff)
         self.assertTrue(admin_user.is_superuser)
+
+"""
+For our homepage we can use Django’s SimpleTestCase which
+is a special subset of Django’s TestCase that is designed
+for webpages that do not have a model included.
+"""
+from django.test import SimpleTestCase
+from django.urls import reverse
+
+class HomepageTests(SimpleTestCase):
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_homepage_url_name(self):
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
