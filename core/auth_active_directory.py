@@ -1,13 +1,10 @@
 """
 This module uses only ms-active-directory to interact to Active Directory
 """
+import logging
+logger = logging.getLogger(__name__)
 
-from django.contrib.auth import get_user_model
-#User = get_user_model()
-
-from ms_active_directory import ADDomain, ADUser, ADGroup, logging_utils
-
-logger = logging_utils.get_logger()
+from ms_active_directory import ADDomain
 
 from core.config import ENV
 
@@ -21,6 +18,7 @@ AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
 AD_USER_ATTRS = ENV['AD_USER_ATTRS']
 AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
 
 class ActiveDirectoryBackend(BaseBackend):
