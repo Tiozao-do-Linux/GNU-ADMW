@@ -34,7 +34,8 @@ is a special subset of Django’s TestCase that is designed
 for webpages that do not have a model included.
 """
 from django.test import SimpleTestCase
-from django.urls import reverse
+from django.urls import reverse, resolve
+from .views import HomePageView
 
 class HomepageTests(SimpleTestCase):
     def setUp(self):
@@ -53,3 +54,7 @@ class HomepageTests(SimpleTestCase):
 
     def test_homepage_does_not_contain_incorrect_html(self):
         self.assertNotContains(self.response, "Hi there! I should not be on the page.")
+
+    def test_homepage_url_resolves_homepageview(self): # new
+        view = resolve("/")
+        self.assertEqual(view.func.__name__, HomePageView.as_view().__name__)
