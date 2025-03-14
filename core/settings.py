@@ -154,7 +154,7 @@ else:
 
 # Allow authentication through Active Directory
 AUTHENTICATION_BACKENDS = [
-    'core.auth_active_directory.ActiveDirectoryBackend',
+    'directory.auth.ActiveDirectoryBackend',
     'django.contrib.auth.backends.ModelBackend', # This is required for fallback
 ]
 
