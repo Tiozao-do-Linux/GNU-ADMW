@@ -37,12 +37,12 @@ except Exception as e:
     print(f'## Error: {str(e)}')
     exit(1)
 
-print(f'# Find user by sAMAccountName="tiozao"')
-user = session.find_user_by_sam_name('tiozao', AD_USER_ATTRS)
-if not user:
-    print(f'## User "tiozao" not found')
-else:
-    print_AD_Object(user)
+# print(f'# Find user by sAMAccountName="tiozao"')
+# user = session.find_user_by_sam_name('tiozao', AD_USER_ATTRS)
+# if not user:
+#     print(f'## User "tiozao" not found')
+# else:
+#     print_AD_Object(user)
 
 print(f'# Find group by distinctiveName="{AD_GROUP_REQUIRED}"')
 group = session.find_group_by_distinguished_name(AD_GROUP_REQUIRED, AD_GROUP_ATTRS)
@@ -89,31 +89,58 @@ else:
     else:
         print(f'# {USER} is NOT a member of any groups')
 
-# Now find users and groups
-USERS='c*'
-print(f'# Find users by commonName="{USERS}"')
-users = session.find_users_by_common_name(USERS, ['memberOf'] )
-if not users:
-    print(f'## Users "{USERS}" NOT found')
-else:
-    for user in users:
-        print_AD_Object(user)
-
-GROUPS='Turma*'
-print(f'# Find groups by commonName="{GROUPS}"')
-groups = session.find_groups_by_common_name(GROUPS, ['member'])
-if not groups:
-    print(f'## Groups "{GROUPS}" NOT found')
-else:
-    for group in groups:
-        print_AD_Object(group)
-
-# from core.auth_active_directory import ConnectActiveDirectory
-# ad = ConnectActiveDirectory(AD_DOMAIN, AD_SERVER, AD_ADMIN_USER, AD_ADMIN_PASSWORD)
-# Mask_Users='c*'
-# users = ad.get_users(Mask_Users)
+# # Now find users and groups
+# USERS='c*'
+# print(f'# Find users by commonName="{USERS}"')
+# users = session.find_users_by_common_name(USERS, ['memberOf'] )
 # if not users:
-#     print(f'## Users "{Mask_Users}" NOT found')
+#     print(f'## Users "{USERS}" NOT found')
 # else:
 #     for user in users:
 #         print_AD_Object(user)
+
+# GROUPS='Turma*'
+# print(f'# Find groups by commonName="{GROUPS}"')
+# groups = session.find_groups_by_common_name(GROUPS, ['member'])
+# if not groups:
+#     print(f'## Groups "{GROUPS}" NOT found')
+# else:
+#     for group in groups:
+#         print_AD_Object(group)
+
+print(f'##############################################')
+from directory.simple_ad import ConnectActiveDirectory, print_object
+con = ConnectActiveDirectory()
+print(con)
+
+Filter_Users='*it*'
+users = con.get_users(filter=Filter_Users, attrs=['memberOf'])
+if not users:
+    print(f'## Users: "{Filter_Users}" NOT found')
+else:
+    for user in users:
+        print_object(user)
+
+Filter_Groups='*monica*'
+groups = con.get_groups(filter=Filter_Groups, attrs=['member'])
+if not groups:
+    print(f'## Groups: "{Filter_Groups}" NOT found')
+else:
+    for group in groups:
+        print_object(group)
+
+Filter_Group_DN=AD_GROUP_REQUIRED
+group = con.get_group_by_dn(filter=Filter_Group_DN)
+if not group:
+    print(f'## Group: "{Filter_Group_DN}" NOT found')
+else:
+    print_object(group)
+
+Filter_User='monica@tiozaodolinux.com'
+user_session = con.login(user=Filter_User, password=AD_ADMIN_PASSWORD)
+if user_session is None:
+    print(f'## User: "{Filter_User}" NOT found')
+# else:
+#     for user in users:
+#         print_object(user)
+print(f'##############################################')
