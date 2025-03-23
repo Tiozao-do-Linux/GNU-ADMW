@@ -1,5 +1,5 @@
 """
-This module facilitates interaction with AD with ms_active_directory
+This module facilitates interaction with AD using ms_active_directory
 """
 import logging
 logger = logging.getLogger(__name__)
@@ -36,23 +36,52 @@ class ConnectActiveDirectory:
         self.ad_domain = None
         self.session = None
 
+        if not self.domain or not self.server or not self.user or not self.password:
+            logger.critical(f'## Auth Error ##: Missing AD credentials')
+            return None
+
         try:
-            # Connect to Active Directory without discover by DNS
+            logger.debug(f'# Connect to Active Directory without discover by DNS') 
             self.ad_domain = ADDomain(self.domain, ldap_servers_or_uris=[self.server], discover_kerberos_servers=False, discover_ldap_servers=False)
-            # Authenticate with account service with admin rights
+            logger.debug(f'# Authenticate with account service with admin rights')
             self.session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
         except Exception as e:
             logger.critical(f'## Auth Error ##: {self.user} - {str(e)}')
-            exit(1)
+
 
     def __str__(self):
         return f"{self.domain} - {self.server} - {self.user}"
     
+
     def get_session(self):
         return self.session
 
+
     def get_domain(self):
         return self.ad_domain
+
+
+    def get_user(self,
+                 filter : str = None,
+                 base : str = None,
+                 attrs: List[str] = ['userPrincipalName', 'memberOf', 'cn', 'givenName', 'sn', 'mail']):
+               
+        user = None
+
+        if base:
+            self.session.set_domain_search_base(base)
+        else:
+            base = self.session.get_domain_search_base()
+
+        logger.debug(f'# get_user({filter}, {base}, {attrs})')
+        user = self.session.find_user_by_sam_name(filter, attrs)
+        if not user:
+            logger.critical(f'## User ({filter}) NOT found')
+        else:
+            logger.info(f'# User ({filter}) found ')
+
+        return user
+
 
     def get_users(self,
                   filter : str = '*', 
@@ -66,62 +95,58 @@ class ConnectActiveDirectory:
         else:
             base = self.session.get_domain_search_base()
 
-        if attrs:
-            self.user_attrs = attrs
-
-        logger.debug(f'get_users({filter}, {base}, {attrs})')
-        print(f'# find_users_by_common_name="{filter}"')
-        print(f'# base={base}')
-        print(f'# attrs={attrs}')
+        logger.debug(f'# get_users({filter}, {base}, {attrs})')
         users = self.session.find_users_by_common_name(filter, attrs )
-        print(f'# Found {len(users)} Users')
+        #logger.info(f'# Found {len(users)} user(s)')
         return users
-        
+
+
     def get_groups(self, 
                   filter : str = '*', 
                   base : str = None,
-                  attrs: List[str] = None):
+                  attrs: List[str] = ['member']):
 
         groups = None
 
         if base:
             self.session.set_domain_search_base(base)
                     
-        if attrs:
-            self.group_attrs = attrs
-
-        logger.debug(f'get_groups({filter}, {base}, {attrs})')
-        print(f'# find_groups_by_common_name="{filter}"')
-        print(f'# base={base}')
-        print(f'# attrs={attrs}')
+        logger.debug(f'# get_groups({filter}, {base}, {attrs})')
         groups = self.session.find_groups_by_common_name(filter, attrs )
-        print(f'# Found {len(groups)} Groups')
+        logger.info(f'# Found {len(groups)} group(s)')
         return groups
-    
+
+
     def get_group_by_dn(self, 
                   filter : str = None,
-                  attrs: List[str] = None):
+                  attrs: List[str] = ['member']):
 
         group = None
 
-        if attrs:
-            self.group_attrs = attrs
-
-        logger.debug(f'get_group_by_dn_({filter}, {attrs})')
-        print(f'# find_group_by_distinguished_name="{filter}"')
-        print(f'# attrs={attrs}')
+        logger.debug(f'# get_group_by_dn({filter}, {attrs})')
         group = self.session.find_group_by_distinguished_name(filter, attrs)
-        print(f'# Found {group.distinguished_name}')
-        return group
-    
+        logger.info(f'# Group ({filter}) found')
 
-    def login(self, user: str, password: str):
+        return group
+
+
+    def login(self,
+              filter: str = None,
+              password: str = None):
+
+        if not filter or not password:
+            logger.critical(f'## Auth Error ##: Missing AD credentials')
+            return None
+
         session = None
 
-        # TODO: Check if user is in AD with groups restrictions
+        # Try to authenticate creating a user session
         try:
-            print(f'# Try Login into AD as {user} / {password}')
-            session = self.ad_domain.create_session_as_user(user=user, password=password)
+            logger.debug(f'# Try Login into AD as {filter}')
+            session = self.ad_domain.create_session_as_user(user=filter, password=password)
         except Exception as e:
-            logger.critical(f'## Auth Error ##: {user} - {str(e)}')
+            logger.critical(f'## Auth Error ##: {filter} - {str(e)}')
+
+        logger.info(f'# Login ({filter}) successful')
+
         return session

@@ -11,6 +11,8 @@ from core.settings import ENV
 #from .models import ADUser, ADGroup, AuditLog
 from .forms import UserCreationForm, UserModificationForm
 
+from directory.simple_ad import ConnectActiveDirectory, print_object
+
 env_context = {
     'ad_domain' : ENV['AD_DOMAIN'],
     'ad_server' : ENV['AD_SERVER'],
@@ -62,25 +64,24 @@ class LogoffView(TemplateView):
 class UserListView(ListView):
     template_name = 'users/list.html'
     context_object_name = 'users'   # variable name used in template
+
     def get_queryset(self):
-        #TODO : Get users from AD in a better way
 
-        ad = ADDomain(ENV['AD_DOMAIN'], ldap_servers_or_uris=[ENV['AD_SERVER']], discover_kerberos_servers=False, discover_ldap_servers=False)
-        session = ad.create_session_as_user(user=ENV['AD_ADMIN_USER'], password=ENV['AD_ADMIN_PASSWORD'])
+        con = ConnectActiveDirectory()
+        users = con.get_users(filter='*', attrs=['sAMAccountName','givenName','sn','mail'])
 
-        #users = ad.get_all_users()  # ADUser.objects.all()
-        users = session.find_users_by_common_name('*', ['sAMAccountName','givenName','sn','mail'])
         # Create list with some attributes
-        
         user_list = [
             {
-                'username': user.get('sAMAccountName'),
-                'full_name': f"{user.get('givenName')} {user.get('sn')}",
-                'email': user.get('mail'),
+                'username':     user.get('sAMAccountName'),
+                'full_name':  f"{user.get('givenName')} {user.get('sn')}",
+                'email':        user.get('mail'),
             }
             for user in users
         ]
+        
         return user_list
+
 
 class GroupListView(ListView):
     template_name = 'groups/list.html'
