@@ -96,8 +96,32 @@ class ConnectActiveDirectory:
             base = self.session.get_domain_search_base()
 
         logger.debug(f'# get_users({filter}, {base}, {attrs})')
+        #TODO - create a search_filter with cn, sn and mail -
+        
+        # # This will search for all users with cn
+        # all_user_search_filter = '(& (objectClass=user) (!(objectClass=computer)) (cn=*) )'
+
+        # # This will search for all users that have an email address
+        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (sAMAccountName=*) (mail=*) )'
+        # search_filter = '(& ({obj_class_attr}={obj_class}) ({attr}={attr_val}) )'
+        # search_filter = '(&(|(objectClass=group)(objectClass=person))(mail=*))'
+
         users = self.session.find_users_by_common_name(filter, attrs )
-        #logger.info(f'# Found {len(users)} user(s)')
+        # users_cn = self.session.find_users_by_attribute('cn', 'monica', attrs)
+        # users_sn = self.session.find_users_by_attribute(attribute_name='sn', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
+        # users_mail = self.session.find_users_by_attribute(attribute_name='mail', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
+        # #all_users = users_sn + users_mail
+        # all_users = users_cn
+        #TODO sort, remove duplicates and objectClass=computer
+
+        # Remove users with objectClass=computer
+        for user in users:
+            if 'computer' in user.get('objectClass'):
+                # print_object(user)
+                logger.info(f'# Remove Computer ({user.get("cn")})')
+                users.remove(user)
+
+        logger.info(f'# Found {len(users)} user(s)')
         return users
 
 

@@ -1,8 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load i18n %}
 {% block subtitle %}Computers{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Computers</h1>
+<div class="jumbotron">
+    <h1>{% trans 'Computers' %}</h1>
+    <hr>
+
+    <form action="?" method="GET">
+        <input type="text" name="filter" placeholder="*Name*" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
+        <button type="submit" class="btn btn-success">Search</button>
+        <a href="{% url 'computer_list' %}" class="btn btn-primary">Clear</a>
+        <a href="#{ % url 'computer_create' %}" class="btn btn-primary">Create New</a>
+    </form>
+    <hr>
+</div>
 
 <div class="card">
     <div class="card-body">

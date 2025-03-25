@@ -6,25 +6,21 @@ urlpatterns = [
     path('about/', AboutPageView.as_view(), name='about'),
     path('help/', HelpPageView.as_view(), name='help'),
 
-    path('users/', UserListView.as_view(), name='user_list'),
-
-#    path('login/', LoginView.as_view(), name='login'),
+#   path('login/', LoginView.as_view(), name='login'),
     path('logoff/', LogoffView.as_view(), name='logoff'),
 
-#    path('user', UserListView.as_view(), name='user_list'),
-#    path('user/<str:username>/', UserDetailView.as_view(), name='user_detail'),
-
-#    path('users/', views.user_list, name='user_list'),
+    path('user/', UserListView.as_view(), name='user_list'),
+    path('user/<str:username>/', UserDetailView.as_view(), name='user_detail'),
 #    path('users/create/', views.user_create, name='user_create'),
 #    path('users/<str:username>/modify/', views.user_modify, name='user_modify'),
 #    path('users/<str:username>/reset-password/', views.user_reset_password, name='user_reset_password'),
 #    path('audit-log/', views.audit_log, name='audit_log'),
 
-#    path('group', GroupListView.as_view(), name='group_list'),
+     path('group/', GroupListView.as_view(), name='group_list'),
 
-#    path('organization', OrganizationListView.as_view(), name='organization_list'),
+     path('organization/', OrganizationListView.as_view(), name='organization_list'),
 
-#    path('computer', ComputerListView.as_view(), name='computer_list'),
+     path('computer/', ComputerListView.as_view(), name='computer_list'),
 
  #   path('user/create/', views.user_create, name='user_create'), 
 #    path('user/<str:username>/edit/', views.user_edit, name='user_edit'), 

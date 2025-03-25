@@ -1,16 +1,16 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block subtitle %}Users{% endblock %}
+{% block subtitle %}Organizations{% endblock %}
 
 {% block content %}
 <div class="jumbotron">
-    <h1>{% trans 'Users' %}</h1>
+    <h1>{% trans 'Organizations' %}</h1>
     <hr>
 
     <form action="?" method="GET">
         <input type="text" name="filter" placeholder="*Name*" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
         <button type="submit" class="btn btn-success">Search</button>
-        <a href="{% url 'user_list' %}" class="btn btn-primary">Clear</a>
-        <a href="#{ % url 'user_create' %}" class="btn btn-primary">Create New</a>
+        <a href="{% url 'organization_list' %}" class="btn btn-primary">Clear</a>
+        <a href="#{ % url 'organization_create' %}" class="btn btn-primary">Create New</a>
     </form>
     <hr>
 </div>
@@ -28,14 +28,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in object_list %}
+                    {% for organization in object_list %}
                     <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.full_name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ organization.username }}</td>
+                        <td>{{ organization.full_name }}</td>
+                        <td>{{ organization.email }}</td>
                         <td>
                             <div class="btn-group">
-                                <a href="{% url 'user_detail' user.username %}" class="btn btn-sm btn-info">Edit</a>
+                                <a href="{% url 'organization_detail' user.username %}" class="btn btn-sm btn-info">Edit</a>
                             </div>
                         </td>
                     </tr>

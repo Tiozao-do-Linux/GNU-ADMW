@@ -1,10 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load i18n %}
 {% block subtitle %}Groups{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Groups</h1>
-    <a href="{% url 'group_create' %}" class="btn btn-primary">Create Group</a>
+<div class="jumbotron">
+    <h1>{% trans 'Groups' %}</h1>
+    <hr>
+
+    <form action="?" method="GET">
+        <input type="text" name="filter" placeholder="*Name*" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
+        <button type="submit" class="btn btn-success">Search</button>
+        <a href="{% url 'group_list' %}" class="btn btn-primary">Clear</a>
+        <a href="#{ % url 'group_create' %}" class="btn btn-primary">Create New</a>
+    </form>
+    <hr>
 </div>
 
 <div class="card">
@@ -46,7 +54,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <form action="{% url 'group_delete' group.name %}" method="post" class="d-inline">
+                                    <form action="#{ % url 'group_delete' group.name %}" method="post" class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
