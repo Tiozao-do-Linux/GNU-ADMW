@@ -114,6 +114,15 @@ class UserDetailView(DetailView):
     template_name = 'users/detail.html'
     #model = ADUser
     # object -> ADUser.objects.get(pk=id)
-    def get_queryset(self):
-        pass
 
+    # def get_queryset(self):
+    #     pass
+
+    def get_object(self, queryset=None):
+        filter = self.kwargs.get('username')
+
+        con = ConnectActiveDirectory()
+        users = con.get_user(filter=filter, attrs=ENV['AD_USER_ATTRS'])
+        # print_object(users)
+        
+        return users.all_attributes
