@@ -76,7 +76,7 @@ class ConnectActiveDirectory:
         logger.debug(f'# get_user({filter}, {base}, {attrs})')
         user = self.session.find_user_by_sam_name(filter, attrs)
         if not user:
-            logger.critical(f'## User ({filter}) NOT found')
+            logger.debug(f'## User ({filter}) NOT found')
         else:
             logger.info(f'# User ({filter}) found ')
 
@@ -149,7 +149,7 @@ class ConnectActiveDirectory:
 
         logger.debug(f'# get_group_by_dn({filter}, {attrs})')
         group = self.session.find_group_by_distinguished_name(filter, attrs)
-        logger.info(f'# Group ({filter}) found')
+        # logger.info(f'# Group ({filter}) found')
 
         return group
 
