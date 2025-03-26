@@ -37,7 +37,7 @@ class ConnectActiveDirectory:
         self.session = None
 
         if not self.domain or not self.server or not self.user or not self.password:
-            logger.critical(f'## Auth Error ##: Missing AD credentials')
+            logger.critical(f'# Auth Error ##: Missing AD credentials')
             return None
 
         try:
@@ -46,7 +46,7 @@ class ConnectActiveDirectory:
             logger.debug(f'# Authenticate with account service with admin rights')
             self.session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
         except Exception as e:
-            logger.critical(f'## Auth Error ##: {self.user} - {str(e)}')
+            logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
 
 
     def __str__(self):
@@ -76,7 +76,7 @@ class ConnectActiveDirectory:
         logger.debug(f'# get_user({filter}, {base}, {attrs})')
         user = self.session.find_user_by_sam_name(filter, attrs)
         if not user:
-            logger.debug(f'## User ({filter}) NOT found')
+            logger.critical(f'# User ({filter}) NOT found')
         else:
             logger.info(f'# User ({filter}) found ')
 
@@ -149,7 +149,10 @@ class ConnectActiveDirectory:
 
         logger.debug(f'# get_group_by_dn({filter}, {attrs})')
         group = self.session.find_group_by_distinguished_name(filter, attrs)
-        # logger.info(f'# Group ({filter}) found')
+        if not group:
+            logger.warning(f'# Group ({filter}) NOT found')
+        else:
+            logger.info(f'# Group ({filter}) found')
 
         return group
 
@@ -159,17 +162,17 @@ class ConnectActiveDirectory:
               password: str = None):
 
         if not filter or not password:
-            logger.critical(f'## Auth Error ##: Missing AD credentials')
+            logger.critical(f'# Auth Error: Missing AD credentials')
             return None
 
         session = None
 
         # Try to authenticate creating a user session
         try:
-            logger.debug(f'# Try Login into AD as {filter}')
+            logger.debug(f'# Login as ({filter})')
             session = self.ad_domain.create_session_as_user(user=filter, password=password)
         except Exception as e:
-            logger.critical(f'## Auth Error ##: {filter} - {str(e)}')
+            logger.critical(f'# Auth ({filter}) Error:  - {str(e)}')
 
         logger.info(f'# Login ({filter}) successful')
 
