@@ -3,6 +3,46 @@
 {% block subtitle %} - {% translate 'User Detail Page' %}{% endblock %}
 
 {% block content %}
-    <h1>{% translate 'User Detail Page' %}</h1>
-    {{ object }}
+<div class="container mt-3">
+    <h1>{% trans 'User Detail Page' %}</h1>
+    <div class="card">
+        <div class="card-header bg-primary text-white mx-auto">
+            {{ object.sAMAccountName }} - {{ object.cn }} - {{ object.mail }}
+        </div>
+        <div class="card-body bg-light text-dark">
+            cn: {{ object.cn }} <hr>
+            sn: {{ object.sn }} <hr>
+            mail: {{ object.mail }}
+            title: {{ object.title }}
+            description: {{ object.description }}
+            physicalDeliveryOfficeName: {{ object.physicalDeliveryOfficeName }}
+            telephoneNumber: {{ object.telephoneNumber }}
+            givenName: {{ object.givenName }}
+            displayName: {{ object.displayName }}
+            company: {{ object.company }}
+            department: {{ object.department }}
+            objectCategory: {{ object.objectCategory }}
+            sAMAccountName: {{ object.sAMAccountName }}
+            userPrincipalName: {{ object.userPrincipalName }}
+            displayName: {{ object.displayName }}
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
+                    <select multiple name="group1" class="form-select" id="group1" size="15" >
+                        {% for group in object.memberOf %}
+                        <option>{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    Coluna 2
+                </div>
+            </div>
+        </div> 
+        <div class="card-footer bg-secondary text-white">
+            Footer
+        </div>
+    </div>
+</div>
 {% endblock %}
