@@ -1,16 +1,18 @@
-{% extends 'base.html' %}{% load i18n %}
-{% block subtitle %}Users{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% load static %}
+{% block subtitle %} - {% trans 'Users' %}{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
+<div class="container mt-3">
     <h1>{% trans 'Users' %}</h1>
     <hr>
+</div>
 
+<div class="container mt-3">
     <form action="?" method="GET">
         <input type="text" name="filter" placeholder="*Name*" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
-        <button type="submit" class="btn btn-success">Search</button>
-        <a href="{% url 'user_list' %}" class="btn btn-primary">Clear</a>
-        <a href="#{ % url 'user_create' %}" class="btn btn-primary">Create New</a>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{% url 'user_list' %}" class="btn btn-warning">Clear</a>
+        <a href="#{ % url 'user_create' %}" class="btn btn-danger">Create New</a>
     </form>
     <hr>
 </div>

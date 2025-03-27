@@ -1,13 +1,13 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load i18n %}
-
-{% block subtitle %} - {% trans 'Help Page' %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% load static %}
+{% block subtitle %} - {% trans 'Help' %}{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-	<h1 class="display-6">{% trans 'Help Page' %}</h1>
+	<h1>{% trans 'Help' %}</h1>
 	<hr>
+</div>
+
+<div class="container mt-3">
 	<p>It will still be built. Please wait. Be patient...</p>
 	<hr>
 	<label for="file">Planning in progress:</label>

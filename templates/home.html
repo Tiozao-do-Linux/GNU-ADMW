@@ -1,22 +1,19 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load i18n %}
-
-{% block subtitle %} - {% trans 'Home Page' %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% load static %}
+{% block subtitle %} - {% trans 'Home' %}{% endblock %}
 
 {% block content %}
-	<div class="container">
-		<h1 class="display-6">{% trans 'Home Page' %}</h1>
-		<hr>
-	</div>
+<div class="container mt-3">
+	<h1>{% trans 'Home' %}</h1>
+	<hr>
+</div>
 
-	<div class="container-fluid bg-1 text-center">
-		<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="200">
-		<hr>
-	</div>
-	
-	<div class="container mt-3 text-center">
-		<p class="h6"><abbr title="Tiozão do Linux - I'm a old Linux user who like share knowledge with others." class="initialism">Who Am I</abbr></p>
-		<hr>
-	</div>
+<div class="container-fluid bg-1 text-center">
+	<img src="{% static 'img/linux-x-microsoft.png' %}" class="img-fluid mx-auto d-block" alt="linux-x-microsoft" width="200">
+	<hr>
+</div>
+
+<div class="container mt-3 text-center">
+	<p class="h6"><abbr title="Tiozão do Linux - I'm a old Linux user who like share knowledge with others." class="initialism">Who Am I</abbr></p>
+	<hr>
+</div>
 {% endblock %}

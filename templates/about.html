@@ -1,12 +1,9 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load i18n %}
-
-{% block subtitle %} - {% trans 'About Page' %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% load static %}
+{% block subtitle %} - {% trans 'About' %}{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-	<h1 class="display-6">{% trans 'About Page' %}</h1>
+	<h1>{% trans 'About' %}</h1>
 	<hr>
 </div>
 {% if user.is_authenticated %}

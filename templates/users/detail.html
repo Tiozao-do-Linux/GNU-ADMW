@@ -1,10 +1,9 @@
 {% extends 'base.html' %}{% load i18n %}
-
-{% block subtitle %} - {% translate 'User Detail Page' %}{% endblock %}
+{% block subtitle %} - {% trans 'User Detail' %}{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-    <h1>{% trans 'User Detail Page' %}</h1>
+    <h1>{% trans 'User Detail' %}</h1>
     <div class="card">
         <div class="card-header bg-primary text-white mx-auto">
             {{ object.sAMAccountName }} - {{ object.cn }} - {{ object.mail }}
