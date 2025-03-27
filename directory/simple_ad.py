@@ -47,6 +47,7 @@ class ConnectActiveDirectory:
             self.session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
         except Exception as e:
             logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
+            return None
 
 
     def __str__(self):
@@ -65,7 +66,9 @@ class ConnectActiveDirectory:
                  filter : str = None,
                  base : str = None,
                  attrs: List[str] = ['userPrincipalName', 'memberOf', 'cn', 'givenName', 'sn', 'mail']):
-               
+
+        if not self.session: return None
+
         user = None
 
         if base:
@@ -87,7 +90,9 @@ class ConnectActiveDirectory:
                   filter : str = '*', 
                   base : str = None,
                   attrs: List[str] = None):
-        
+
+        if not self.session: return None
+
         users = None
 
         if base:
@@ -130,6 +135,8 @@ class ConnectActiveDirectory:
                   base : str = None,
                   attrs: List[str] = ['member']):
 
+        if not self.session: return None
+
         groups = None
 
         if base:
@@ -144,6 +151,8 @@ class ConnectActiveDirectory:
     def get_group_by_dn(self, 
                   filter : str = None,
                   attrs: List[str] = ['member']):
+
+        if not self.session: return None
 
         group = None
 
@@ -160,6 +169,8 @@ class ConnectActiveDirectory:
     def login(self,
               filter: str = None,
               password: str = None):
+
+        if not self.session: return None
 
         if not filter or not password:
             logger.critical(f'# Auth Error: Missing AD credentials')
