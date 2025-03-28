@@ -71,14 +71,22 @@ class UserListView(ListView):
             return None
 
         con = ConnectActiveDirectory()
-        users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail'])
+        users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail','userAccountControl',
+                                                    'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged', 'distinguishedName'])
 
         # Create list with some attributes
         user_list = [
             {
-                'username':     user.get('sAMAccountName'),
-                'full_name':  f"{user.get('givenName')} {user.get('sn')}",
-                'email':        user.get('mail'),
+                'username':              user.get('sAMAccountName'),
+                'givenName':             user.get('givenName'),
+                'sn':                    user.get('sn'),
+                'email':                 user.get('mail'),
+                'status':                user.get('userAccountControl'),
+                'lastLogonTimestamp':    user.get('lastLogonTimestamp'),
+                'pwdLastSet':            user.get('pwdLastSet'),
+                'whenCreated':           user.get('whenCreated'),
+                'whenChanged':           user.get('whenChanged'),
+                'distinguishedName':     user.distinguished_name, #user.get('distinguishedName'), #user.get_user_distinguished_name,
             }
             for user in users
         ]
@@ -123,6 +131,8 @@ class UserDetailView(DetailView):
 
         con = ConnectActiveDirectory()
         users = con.get_user(filter=filter, attrs=ENV['AD_USER_ATTRS'])
-        # print_object(users)
-        
+        #print_object(users)
+
+        if not users: return None
+
         return users.all_attributes
