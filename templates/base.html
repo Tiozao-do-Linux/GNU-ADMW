@@ -19,22 +19,24 @@
     {% include 'navbar.html' %}
 
     <!-- messages -->
-    <div class="container mt-4">
-      {% if messages %}
+    {% if messages %}
+    <div class="container mt-3">
       {% for message in messages %}
       <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
           {{ message }}
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
       {% endfor %}
-      {% endif %}
-
-      {% block content %}{% endblock %}
     </div>
+    {% endif %}
+
+    <!-- Content -->
+    {% block content %}{% endblock %}
 
     <!-- Footer Fixed -->
-    <footer class="bg-light fixed-bottom small text-center">
-        <p>For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a>. <a href="#page-top">^</a></p> 
+    <footer class="container-fluid text-center text-bg-dark small py-2">
+      For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a> <a href="#page-top">^</a>
     </footer>
+
   </body>
 </html>

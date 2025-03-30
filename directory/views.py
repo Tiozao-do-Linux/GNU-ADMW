@@ -72,7 +72,7 @@ class UserListView(ListView):
 
         con = ConnectActiveDirectory()
         users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail','userAccountControl',
-                                                    'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged', 'distinguishedName'])
+                                                    'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged', 'company', 'department', 'l', 'st', 'o'])
 
         # Create list with some attributes
         user_list = [
@@ -89,6 +89,11 @@ class UserListView(ListView):
                 'whenChanged':           user.get('whenChanged'),
                 'distinguishedName':     user.distinguished_name,
                 'lastOU':                extract_ou(user.distinguished_name),
+                'company':               user.get('company'),
+                'department':            user.get('department'),
+                'l':                     user.get('l'),
+                'st':                    user.get('st'),
+                'o':                     user.get('o'),
             }
             for user in users
         ]

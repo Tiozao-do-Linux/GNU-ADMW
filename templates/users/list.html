@@ -7,7 +7,7 @@
     <hr>
 </div>
 
-<div class="container mt-3">
+<div class="container">
     <form action="?" method="GET">
         <input type="text" name="filter" placeholder="Hint: Use wildcards (*)" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
         <button type="submit" class="btn btn-primary">Search</button>
@@ -18,9 +18,9 @@
     <hr>
 </div>
 
-<div class="card">
+<div class="container-fluid card">
     <div class="card-header bg-secondary text-white">
-        Total: {{ object_list|length }}
+        <strong>Total: {{ object_list|length }}</strong> on ({% now "Y-m-d G:i:s" %})
     </div>
 
     <div class="card-body">
@@ -29,6 +29,8 @@
                 <thead>
                     <tr>
                         <th>Username</th>
+                        <th>Company - Department</th>
+                        <th>City/State</th>
                         <th>Organizational Unit</th>
                         <th>Full Name</th>
                         <th>Email</th>
@@ -41,6 +43,8 @@
                     {% for user in object_list %}
                     <tr>
                         <td>{{ user.username }}</td>
+                        <td>{{ user.company }} - {{ user.department }}</td>
+                        <td>{{ user.l }}/{{ user.st }}</td>
                         <td>{{ user.lastOU }}</td>
                         <td>{{ user.givenName }} {{ user.sn }}</td>
                         <td>{{ user.email }}</td>
@@ -91,7 +95,7 @@
 
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="bg-warning text-center">No users found</td>
+                        <td colspan="9" class="bg-warning text-center">No users found</td>
                     </tr>
                     {% endfor %}
                 </tbody>
