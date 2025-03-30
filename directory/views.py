@@ -11,7 +11,7 @@ from core.settings import ENV
 #from .models import ADUser, ADGroup, AuditLog
 from .forms import UserCreationForm, UserModificationForm
 
-from directory.simple_ad import ConnectActiveDirectory, print_object
+from directory.simple_ad import ConnectActiveDirectory, print_object, userAccountControl_is_enabled, extract_ou
 
 env_context = {
     'ad_domain' : ENV['AD_DOMAIN'],
@@ -78,15 +78,17 @@ class UserListView(ListView):
         user_list = [
             {
                 'username':              user.get('sAMAccountName'),
-                'givenName':             user.get('givenName'),
-                'sn':                    user.get('sn'),
-                'email':                 user.get('mail'),
-                'status':                user.get('userAccountControl'),
+                'givenName':             user.get('givenName') if user.get('givenName') else '-',
+                'sn':                    user.get('sn') if user.get('sn') else '',
+                'email':                 user.get('mail') if user.get('mail') else '-',
+                'userAccountControl':    user.get('userAccountControl'),
+                'status':                userAccountControl_is_enabled(user.get('userAccountControl')),
                 'lastLogonTimestamp':    user.get('lastLogonTimestamp'),
                 'pwdLastSet':            user.get('pwdLastSet'),
                 'whenCreated':           user.get('whenCreated'),
                 'whenChanged':           user.get('whenChanged'),
-                'distinguishedName':     user.distinguished_name, #user.get('distinguishedName'), #user.get_user_distinguished_name,
+                'distinguishedName':     user.distinguished_name,
+                'lastOU':                extract_ou(user.distinguished_name),
             }
             for user in users
         ]

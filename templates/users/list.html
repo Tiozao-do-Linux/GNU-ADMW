@@ -29,6 +29,7 @@
                 <thead>
                     <tr>
                         <th>Username</th>
+                        <th>Organizational Unit</th>
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Last Change Password</th>
@@ -39,15 +40,23 @@
                 <tbody>
                     {% for user in object_list %}
                     <tr>
-                        <td>{{ user.username }} // {{ user.distinguedName}}</td>
-                        <td>{{ user.givenName }} {{ user.sn}}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.lastOU }}</td>
+                        <td>{{ user.givenName }} {{ user.sn }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.pwdLastSet }}</td>
                         <td>
-                            <abbr 
+                            {% comment "Dont show html abbr" %}
+                            <abbr
                                 title="Created: {{ user.whenCreated }} | Changed: {{ user.whenChanged }} | Last Logon: {{ user.lastLogonTimestamp }} | Last Change Password: {{ user.pwdLastSet }}" class="initialism">
-                                {{ user.status }}
-                            </abbr>                            
+                                Status: {{ user.status }}
+                            </abbr>
+                            {% endcomment %}
+                            {% if user.status %}
+                                <button type="button" class="btn btn-sm btn-success">Active ({{ user.userAccountControl}})</button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-danger">Disabled ({{ user.userAccountControl}})</button>
+                            {% endif %}
                         </td>
                         <td>
                             <div class="btn-group">
@@ -82,7 +91,7 @@
 
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center">No users found</td>
+                        <td colspan="7" class="bg-warning text-center">No users found</td>
                     </tr>
                     {% endfor %}
                 </tbody>

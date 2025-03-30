@@ -4,6 +4,24 @@ This module facilitates interaction with AD using ms_active_directory
 import logging
 logger = logging.getLogger(__name__)
 
+def userAccountControl_is_enabled(uAC: int) -> bool:
+    """
+    Is Active if uAC in 512|544|66032|66048|66080|262656|262688|328192|328224
+    The & operator compares each bit and set it to 1 if both are 1, otherwise it is set to 0:
+    """
+    return uAC & 2 == 0
+
+def extract_ou(dn: str) -> str:
+    """
+      Returns where the user is in the structure
+    """
+    parts = dn.split(',')
+    parts.pop(0)    # remove first element
+    
+    # grep for OUs or CN
+    ou_parts = [part for part in parts if part.startswith(('OU=','CN='))]
+    return ','.join(ou_parts)
+
 import json
 def print_object(object):
     if object:
