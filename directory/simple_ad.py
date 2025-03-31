@@ -35,7 +35,7 @@ def print_object(object):
 
 from core.config import ENV
 
-from ms_active_directory import ADDomain
+from ms_active_directory import ADDomain, ADUser, ADGroup
 
 from typing import List
 
@@ -53,6 +53,7 @@ class ConnectActiveDirectory:
 
         self.ad_domain = None
         self.ad_session = None
+        self.ldap_session = None
 
         if not self.domain or not self.server or not self.user or not self.password:
             logger.critical(f'# Auth Error ##: Missing AD credentials')
@@ -63,8 +64,12 @@ class ConnectActiveDirectory:
             self.ad_domain = ADDomain(self.domain, ldap_servers_or_uris=[self.server], discover_kerberos_servers=False, discover_ldap_servers=False)
             logger.debug(f'# Authenticate with account service with admin rights')
             self.ad_session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
-            session_user = self.ad_session.who_am_i()
-            print(f'# Authenticated as: {session_user}')
+            # session_user = self.ad_session.who_am_i()
+            # print(f'# Authenticated as: {session_user}')
+
+            self.ldap_session = self.ad_domain.create_ldap_connection_as_user(user=self.user, password=self.password)
+            if self.ldap_session: print(f'## LDAP Session: {self.ldap_session} ##')
+
 
         except Exception as e:
             logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
@@ -81,6 +86,36 @@ class ConnectActiveDirectory:
 
     def get_domain(self):
         return self.ad_domain
+
+
+    def get_users(self,
+                          filter : str = None,
+                          base : str = None,
+                          attrs: List[str] = None):
+
+        if not self.ad_session: return None
+
+        users = None
+
+        if base:
+            self.ad_session.set_domain_search_base(base)
+        else:
+            base = self.ad_session.get_domain_search_base()
+
+        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (cn={filter}) )'
+
+        print(f'# get_usersby_filter( {search_filter}, {base}, {attrs})')
+        logger.info(f'# get_users_by_filter({filter}, {base}, {attrs})')
+
+        users = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADUser)
+        # print(f'## Found {len(users)} object(s)')
+    
+        if not users:
+            logger.critical(f'# Users ({filter}) NOT found')
+        else:
+            logger.info(f'# Found {len(users)} user(s)')
+            #logger.info(f'# Users ({filter}) found ')
+        return users
 
 
     def get_user(self,
@@ -107,7 +142,7 @@ class ConnectActiveDirectory:
         return user
 
 
-    def get_users(self,
+    def get_users_by_common_name(self,
                   filter : str = '*', 
                   base : str = None,
                   attrs: List[str] = None):
