@@ -52,7 +52,7 @@ class ConnectActiveDirectory:
         self.group_denied = ENV['AD_GROUP_DENIED']
 
         self.ad_domain = None
-        self.session = None
+        self.ad_session = None
 
         if not self.domain or not self.server or not self.user or not self.password:
             logger.critical(f'# Auth Error ##: Missing AD credentials')
@@ -62,7 +62,10 @@ class ConnectActiveDirectory:
             logger.debug(f'# Connect to Active Directory without discover by DNS') 
             self.ad_domain = ADDomain(self.domain, ldap_servers_or_uris=[self.server], discover_kerberos_servers=False, discover_ldap_servers=False)
             logger.debug(f'# Authenticate with account service with admin rights')
-            self.session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
+            self.ad_session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
+            session_user = self.ad_session.who_am_i()
+            print(f'# Authenticated as: {session_user}')
+
         except Exception as e:
             logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
             return None
@@ -73,7 +76,7 @@ class ConnectActiveDirectory:
     
 
     def get_session(self):
-        return self.session
+        return self.ad_session
 
 
     def get_domain(self):
@@ -85,17 +88,17 @@ class ConnectActiveDirectory:
                  base : str = None,
                  attrs: List[str] = ['userPrincipalName', 'memberOf', 'cn', 'givenName', 'sn', 'mail']):
 
-        if not self.session: return None
+        if not self.ad_session: return None
 
         user = None
 
         if base:
-            self.session.set_domain_search_base(base)
+            self.ad_session.set_domain_search_base(base)
         else:
-            base = self.session.get_domain_search_base()
+            base = self.ad_session.get_domain_search_base()
 
         logger.debug(f'# get_user({filter}, {base}, {attrs})')
-        user = self.session.find_user_by_sam_name(filter, attrs)
+        user = self.ad_session.find_user_by_sam_name(filter, attrs)
         if not user:
             logger.critical(f'# User ({filter}) NOT found')
         else:
@@ -109,33 +112,45 @@ class ConnectActiveDirectory:
                   base : str = None,
                   attrs: List[str] = None):
 
-        if not self.session: return None
+        if not self.ad_session: return None
 
         users = None
 
         if base:
-            self.session.set_domain_search_base(base)
+            self.ad_session.set_domain_search_base(base)
         else:
-            base = self.session.get_domain_search_base()
+            base = self.ad_session.get_domain_search_base()
 
         logger.debug(f'# get_users({filter}, {base}, {attrs})')
-        #TODO - create a search_filter with cn, sn and mail -
+        #TODO - create a search_filter with cn, sn and mail
+        # https://ms-active-directory.readthedocs.io/en/latest/ad_domain.html#creating-a-connection-with-the-addomain
+        # https://ldap3.readthedocs.io/en/latest/searches.html
         
-        # # This will search for all users with cn
-        # all_user_search_filter = '(& (objectClass=user) (!(objectClass=computer)) (cn=*) )'
+        # # This will search for all users with cn initialized with "M"
+        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (cn=M*) )'
 
-        # # This will search for all users that have an email address
-        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (sAMAccountName=*) (mail=*) )'
+        # # This will search for all users that have an email address and sn initialized with "S*"
+        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (sn=S*) (mail=*) )'
+
+        # # This will search for all groups that initialize with "G"
+        # search_filter = '(& (objectClass=group) (!(objectClass=person)) (cn=G*) )'
+
         # search_filter = '(& ({obj_class_attr}={obj_class}) ({attr}={attr_val}) )'
-        # search_filter = '(&(|(objectClass=group)(objectClass=person))(mail=*))'
+        
+        # users_cn = self.session.find_users_by_attribute('l', 'Campo Grande', ['memberOf'])
+        # users_cn = self.session.find_users_by_attribute('company', 'Grupo Imagetech', ['memberOf'])
+        # users_cn = self.session.find_users_by_attribute('givenName', 'Jarbas', ['memberOf'])
 
-        # users_cn = self.session.find_users_by_attribute('cn', 'monica', attrs)
+        # users_cn = self.session.find_users_by_attribute('CPF', '50832875600', ['memberOf'])
+        # print(f'Found {len(users_cn)} users_cn')
+
         # users_sn = self.session.find_users_by_attribute(attribute_name='sn', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
         # users_mail = self.session.find_users_by_attribute(attribute_name='mail', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
-        # #all_users = users_sn + users_mail
+        # all_users = users_cn + users_sn + users_mail
         # all_users = users_cn
+        # print_object(all_users)
 
-        users = self.session.find_users_by_common_name(filter, attrs )
+        users = self.ad_session.find_users_by_common_name(filter, attrs )
 
         # Remove users with objectClass=computer
         for user in users:
@@ -153,15 +168,15 @@ class ConnectActiveDirectory:
                   base : str = None,
                   attrs: List[str] = ['member']):
 
-        if not self.session: return None
+        if not self.ad_session: return None
 
         groups = None
 
         if base:
-            self.session.set_domain_search_base(base)
+            self.ad_session.set_domain_search_base(base)
                     
         logger.debug(f'# get_groups({filter}, {base}, {attrs})')
-        groups = self.session.find_groups_by_common_name(filter, attrs )
+        groups = self.ad_session.find_groups_by_common_name(filter, attrs )
         logger.info(f'# Found {len(groups)} group(s)')
         return groups
 
@@ -170,12 +185,12 @@ class ConnectActiveDirectory:
                   filter : str = None,
                   attrs: List[str] = ['member']):
 
-        if not self.session: return None
+        if not self.ad_session: return None
 
         group = None
 
         logger.debug(f'# get_group_by_dn({filter}, {attrs})')
-        group = self.session.find_group_by_distinguished_name(filter, attrs)
+        group = self.ad_session.find_group_by_distinguished_name(filter, attrs)
         if not group:
             logger.warning(f'# Group ({filter}) NOT found')
         else:
@@ -188,7 +203,7 @@ class ConnectActiveDirectory:
               filter: str = None,
               password: str = None):
 
-        if not self.session: return None
+        if not self.ad_session: return None
 
         if not filter or not password:
             logger.critical(f'# Auth Error: Missing AD credentials')
