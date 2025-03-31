@@ -4,7 +4,7 @@ This module uses only ms-active-directory to interact to Active Directory
 import logging
 logger = logging.getLogger(__name__)
 
-from ms_active_directory import ADDomain
+# from ms_active_directory import ADDomain
 
 from core.config import ENV
 
@@ -18,7 +18,7 @@ AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
 AD_USER_ATTRS = ENV['AD_USER_ATTRS']
 AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 
-from directory.simple_ad import ConnectActiveDirectory, print_object
+from directory.simple_ad import ConnectActiveDirectory  #, print_object
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
@@ -26,7 +26,7 @@ from django.contrib.auth.backends import BaseBackend
 class ActiveDirectoryBackend(BaseBackend):
     """
     The main backend class. This implements the auth backend API, although it
-    actually delegates most of its work to ADUser and ADGroup
+    actually delegates most of its work to ADUser
     """
 
     def get_user_model(self):
