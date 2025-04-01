@@ -20,13 +20,15 @@
 
 <div class="container-fluid card">
     <div class="card-header bg-secondary text-white">
-        Start on <strong>({% now "Y-m-d G:i:s,u" %})</strong>
+        <small>
+        Start on <strong>({{ start_date|date:"Y-m-d G:i:s,u" }})</strong>
         {% if object_list|length > 100 %}
         - Showing 100 of <strong>{{ object_list|length }}</strong>
          - Hint: <strong></strong>Refine your search</strong>
         {% else %}
         - Showing <strong>{{ object_list|length }}</strong>
         {% endif %}
+        </small>
     </div>
 
     <div class="card-body">
@@ -110,7 +112,11 @@
     </div>
 
     <div class="card-footer bg-secondary text-white">
-        Finished on <strong>({% now "Y-m-d G:i:s,u" %})</strong>
+        <small>
+        {% now "Y-m-d G:i:s,u" as todays_date %}
+        Finished on <strong>( {{ todays_date  }} )</strong> - 
+        Generated in <strong>{{ render_time|floatformat:6 }} seconds</strong>
+        </small>
     </div>
 
 </div>

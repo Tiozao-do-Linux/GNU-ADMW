@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
+import datetime
 
 from core.settings import ENV
 #from .models import ADUser, ADGroup, AuditLog
@@ -60,6 +61,28 @@ class LogoffView(TemplateView):
 # User Management Views
 class UserListView(ListView):
     template_name = 'users/list.html'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["start_date"] = timezone.now()
+    #     return context
+
+    def dispatch(self, request, *args, **kwargs):
+        start_time = datetime.datetime.now()  # Begin time
+
+        response = super().dispatch(request, *args, **kwargs)
+
+        end_time = datetime.datetime.now()  # End time
+
+        render_time = (end_time - start_time).total_seconds()  # Time difference
+
+        # Add the render time to the context
+        if hasattr(response, 'context_data'):
+            response.context_data['render_time'] = render_time
+            response.context_data['start_date'] = start_time
+            response.context_data['end_date'] = end_time
+
+        return response
 
     def get_queryset(self):
         
