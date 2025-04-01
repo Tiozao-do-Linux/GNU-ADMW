@@ -19,8 +19,8 @@ def extract_ou(dn: str) -> str:
     parts.pop(0)    # remove first element
     
     # grep for OUs or CN
-    ou_parts = [part for part in parts if part.startswith(('OU=','CN='))]
-    return ','.join(ou_parts)
+    ou_parts = [part[3:] for part in parts if part.startswith(('OU=','CN='))]
+    return ' > '.join(ou_parts)
 
 import json
 def print_object(object):
@@ -127,7 +127,7 @@ class ConnectActiveDirectory:
         else:
             base = self.ad_session.get_domain_search_base()
 
-        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (| (cn={filter}) (givenName={filter}) (sn={filter}) (mail={filter}) (company={filter}) (department={filter}) (employeeNumber={filter}) ) )'
+        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (| (sAMAccountName={filter}) (cn={filter}) (givenName={filter}) (sn={filter}) (mail={filter}) (company={filter}) (department={filter}) (employeeNumber={filter}) ) )'
 
         logger.info(f'# get_users( {filter}, {base}, {attrs})')
 

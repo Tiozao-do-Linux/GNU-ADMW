@@ -51,7 +51,7 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.company }} - {{ user.department }}</td>
                         <td>{{ user.l }}/{{ user.st }}</td>
-                        <td>{{ user.lastOU }}</td>
+                        <td><abbr title="{{ user.lastOU }}">{{ user.lastOU|truncatechars:30 }}</abbr></td>
                         <td>{{ user.givenName }} {{ user.sn }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.pwdLastSet }}</td>
