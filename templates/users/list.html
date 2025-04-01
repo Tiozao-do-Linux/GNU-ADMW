@@ -9,18 +9,24 @@
 
 <div class="container">
     <form action="?" method="GET">
-        <input type="text" name="filter" placeholder="Hint: Use wildcards (*)" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
+        <input type="text" name="filter" placeholder="Dont Use wildcards (*)" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
         <button type="submit" class="btn btn-primary">Search</button>
         <a href="{% url 'user_list' %}" class="btn btn-warning">Clear</a>
         <a href="#{ % url 'user_create' %}" class="btn btn-danger">Create New</a>
     </form>
-    <p class="text-primary"><strong>Examples:</strong>  Text* | *Text | *Text* | *Text*OtherText*</p>
+    
     <hr>
 </div>
 
 <div class="container-fluid card">
     <div class="card-header bg-secondary text-white">
-        <strong>Total: {{ object_list|length }}</strong> on ({% now "Y-m-d G:i:s" %})
+        Start on <strong>({% now "Y-m-d G:i:s,u" %})</strong>
+        {% if object_list|length > 100 %}
+        - Showing 100 of <strong>{{ object_list|length }}</strong>
+         - Hint: <strong></strong>Refine your search</strong>
+        {% else %}
+        - Showing <strong>{{ object_list|length }}</strong>
+        {% endif %}
     </div>
 
     <div class="card-body">
@@ -40,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in object_list %}
+                    {% for user in object_list|slice:":100" %}
                     <tr>
                         <td>{{ user.username }}</td>
                         <td>{{ user.company }} - {{ user.department }}</td>
@@ -102,5 +108,10 @@
             </table>
         </div>
     </div>
+
+    <div class="card-footer bg-secondary text-white">
+        Finished on <strong>({% now "Y-m-d G:i:s,u" %})</strong>
+    </div>
+
 </div>
 {% endblock %}

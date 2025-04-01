@@ -60,14 +60,11 @@ class LogoffView(TemplateView):
 # User Management Views
 class UserListView(ListView):
     template_name = 'users/list.html'
-    # context_object_name = 'users'   # variable name used in template
-    #extra_context = { "username" : filter }
 
     def get_queryset(self):
         
         filter = self.request.GET.get('filter')
-        if not filter:
-            filter = '*'
+        if not filter or '*' in filter:
             return None
 
         con = ConnectActiveDirectory()

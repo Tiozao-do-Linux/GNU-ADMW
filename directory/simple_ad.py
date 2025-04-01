@@ -35,7 +35,7 @@ def print_object(object):
 
 from core.config import ENV
 
-from ms_active_directory import ADDomain, ADUser, ADGroup
+from ms_active_directory import ADDomain, ADUser, ADGroup, ADObject
 
 from typing import List
 
@@ -53,7 +53,7 @@ class ConnectActiveDirectory:
 
         self.ad_domain = None
         self.ad_session = None
-        self.ldap_session = None
+        # self.ldap_session = None
 
         if not self.domain or not self.server or not self.user or not self.password:
             logger.critical(f'# Auth Error ##: Missing AD credentials')
@@ -67,9 +67,8 @@ class ConnectActiveDirectory:
             # session_user = self.ad_session.who_am_i()
             # print(f'# Authenticated as: {session_user}')
 
-            self.ldap_session = self.ad_domain.create_ldap_connection_as_user(user=self.user, password=self.password)
-            if self.ldap_session: print(f'## LDAP Session: {self.ldap_session} ##')
-
+            # self.ldap_session = self.ad_domain.create_ldap_connection_as_user(user=self.user, password=self.password)
+            # if self.ldap_session: print(f'## LDAP Session: {self.ldap_session} ##')
 
         except Exception as e:
             logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
@@ -88,36 +87,6 @@ class ConnectActiveDirectory:
         return self.ad_domain
 
 
-    def get_users(self,
-                          filter : str = None,
-                          base : str = None,
-                          attrs: List[str] = None):
-
-        if not self.ad_session: return None
-
-        users = None
-
-        if base:
-            self.ad_session.set_domain_search_base(base)
-        else:
-            base = self.ad_session.get_domain_search_base()
-
-        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (cn={filter}) )'
-
-        print(f'# get_usersby_filter( {search_filter}, {base}, {attrs})')
-        logger.info(f'# get_users_by_filter({filter}, {base}, {attrs})')
-
-        users = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADUser)
-        # print(f'## Found {len(users)} object(s)')
-    
-        if not users:
-            logger.critical(f'# Users ({filter}) NOT found')
-        else:
-            logger.info(f'# Found {len(users)} user(s)')
-            #logger.info(f'# Users ({filter}) found ')
-        return users
-
-
     def get_user(self,
                  filter : str = None,
                  base : str = None,
@@ -133,7 +102,9 @@ class ConnectActiveDirectory:
             base = self.ad_session.get_domain_search_base()
 
         logger.debug(f'# get_user({filter}, {base}, {attrs})')
+
         user = self.ad_session.find_user_by_sam_name(filter, attrs)
+
         if not user:
             logger.critical(f'# User ({filter}) NOT found')
         else:
@@ -142,10 +113,10 @@ class ConnectActiveDirectory:
         return user
 
 
-    def get_users_by_common_name(self,
-                  filter : str = '*', 
-                  base : str = None,
-                  attrs: List[str] = None):
+    def get_users(self,
+                          filter : str = None,
+                          base : str = None,
+                          attrs: List[str] = None):
 
         if not self.ad_session: return None
 
@@ -156,50 +127,22 @@ class ConnectActiveDirectory:
         else:
             base = self.ad_session.get_domain_search_base()
 
-        logger.debug(f'# get_users({filter}, {base}, {attrs})')
-        #TODO - create a search_filter with cn, sn and mail
-        # https://ms-active-directory.readthedocs.io/en/latest/ad_domain.html#creating-a-connection-with-the-addomain
-        # https://ldap3.readthedocs.io/en/latest/searches.html
-        
-        # # This will search for all users with cn initialized with "M"
-        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (cn=M*) )'
+        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (| (cn={filter}) (givenName={filter}) (sn={filter}) (mail={filter}) (company={filter}) (department={filter}) (employeeNumber={filter}) ) )'
 
-        # # This will search for all users that have an email address and sn initialized with "S*"
-        # search_filter = '(& (objectClass=user) (!(objectClass=computer)) (sn=S*) (mail=*) )'
+        logger.info(f'# get_users( {filter}, {base}, {attrs})')
 
-        # # This will search for all groups that initialize with "G"
-        # search_filter = '(& (objectClass=group) (!(objectClass=person)) (cn=G*) )'
+        users = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADUser)
+    
+        if not users:
+            logger.critical(f'# Users ({filter}) NOT found')
+        else:
+            logger.info(f'# Found {len(users)} user(s)')
 
-        # search_filter = '(& ({obj_class_attr}={obj_class}) ({attr}={attr_val}) )'
-        
-        # users_cn = self.session.find_users_by_attribute('l', 'Campo Grande', ['memberOf'])
-        # users_cn = self.session.find_users_by_attribute('company', 'Grupo Imagetech', ['memberOf'])
-        # users_cn = self.session.find_users_by_attribute('givenName', 'Jarbas', ['memberOf'])
-
-        # users_cn = self.session.find_users_by_attribute('CPF', '50832875600', ['memberOf'])
-        # print(f'Found {len(users_cn)} users_cn')
-
-        # users_sn = self.session.find_users_by_attribute(attribute_name='sn', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
-        # users_mail = self.session.find_users_by_attribute(attribute_name='mail', attribute_value=filter, attributes_to_lookup=attrs, size_limit=100 )
-        # all_users = users_cn + users_sn + users_mail
-        # all_users = users_cn
-        # print_object(all_users)
-
-        users = self.ad_session.find_users_by_common_name(filter, attrs )
-
-        # Remove users with objectClass=computer
-        for user in users:
-            if 'computer' in user.get('objectClass'):
-                # print_object(user)
-                logger.info(f'# Remove Computer ({user.get("cn")})')
-                users.remove(user)
-
-        logger.info(f'# Found {len(users)} user(s)')
         return users
 
 
     def get_groups(self, 
-                  filter : str = '*', 
+                  filter : str = None, 
                   base : str = None,
                   attrs: List[str] = ['member']):
 
@@ -209,10 +152,15 @@ class ConnectActiveDirectory:
 
         if base:
             self.ad_session.set_domain_search_base(base)
-                    
-        logger.debug(f'# get_groups({filter}, {base}, {attrs})')
-        groups = self.ad_session.find_groups_by_common_name(filter, attrs )
+
+        search_filter=f'(& (objectClass=group) (| (cn={filter}) (description={filter}) ) )'
+
+        logger.debug(f'# get_groups({search_filter}, {base}, {attrs})')
+
+        groups = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADGroup)
+
         logger.info(f'# Found {len(groups)} group(s)')
+
         return groups
 
 
@@ -232,6 +180,52 @@ class ConnectActiveDirectory:
             logger.info(f'# Group ({filter}) found')
 
         return group
+
+    def get_organizations(self, 
+                  filter : str = None, 
+                  base : str = None,
+                  attrs: List[str] = ['member']):
+
+        if not self.ad_session: return None
+
+        organizations = None
+
+        if base:
+            self.ad_session.set_domain_search_base(base)
+
+        search_filter=f'(& (objectClass=organizationalUnit) (| (ou={filter}) (description={filter}) ) )'
+        #TODO: refactor
+
+        logger.debug(f'# get_organizations( {search_filter}, {base}, {attrs})')
+
+        organizations = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADObject)
+
+        logger.info(f'# Found {len(organizations)} group(s)')
+
+        return organizations
+
+
+    def get_computers(self, 
+                  filter : str = None, 
+                  base : str = None,
+                  attrs: List[str] = ['member']):
+
+        if not self.ad_session: return None
+
+        computers = None
+
+        if base:
+            self.ad_session.set_domain_search_base(base)
+
+        search_filter=f'(& (objectClass=computer) (| (cn={filter}$) (description={filter}) ) )'
+
+        logger.debug(f'# get_computers( {search_filter}, {base}, {attrs})')
+
+        computers = self.ad_session._find_ad_objects_and_attrs(base, search_filter, 'SUBTREE', attrs, 0, ADUser)
+
+        logger.info(f'# Found {len(computers)} group(s)')
+
+        return computers
 
 
     def login(self,

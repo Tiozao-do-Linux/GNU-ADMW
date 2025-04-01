@@ -30,14 +30,44 @@
 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                        home-tab...
+                        <div class="mb-3">
+                            <label for="givenName" class="form-label">First name:</label>
+                            <input type="text" class="form-control" id="givenName" name="givenName" value="{{ object.givenName }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sn" class="form-label">Last name:</label>
+                            <input type="text" class="form-control" id="sn" name="sn" value="{{ object.sn }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="mail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="mail" name="mail" value="{{ object.mail }}">
+                        </div>
+                        company: {{ object.company }} <hr>
+                        department: {{ object.department }} <hr>
+                        telephoneNumber: {{ object.telephoneNumber }} <hr>
+                        cn: {{ object.cn }} <hr>
+                        name: {{ object.name }} <hr>
+                        title: {{ object.title }} <hr>
+                        description: {{ object.description }} <hr>
+                        physicalDeliveryOfficeName: {{ object.physicalDeliveryOfficeName }} <hr>
+                        displayName: {{ object.displayName }} <hr>
+                        sAMAccountName: {{ object.sAMAccountName }} <hr>
+                        userPrincipalName: {{ object.userPrincipalName }} <hr>
                     </div>
+
                     <div class="tab-pane" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        profile-tab...
+                        <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
+                        <select multiple name="group1" class="form-select" id="group1" size="15" >
+                            {% for group in object.memberOf %}
+                            <option>{{ group }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+
                     <div class="tab-pane" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                         contact-tab...
                     </div>
+
                     <div class="tab-pane" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
                         disabled-tab...
                     </div>
@@ -47,49 +77,15 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="fname" class="form-label">First name:</label>
-                            <input type="text" class="form-control" id="fname" name="fname">
-                        </div>
 
-                        <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
-                        <select multiple name="group1" class="form-select" id="group1" size="15" >
-                            {% for group in object.memberOf %}
-                            <option>{{ group }}</option>
-                            {% endfor %}
-                        </select>
                     </div>
 
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="lname" class="form-label">Last name:</label>
-                            <input type="text" class="form-control" id="lname" name="lname">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email">
-                        </div>
                         <div class="mb-3">
                             <label for="birthday" class="form-label">Birthday:</label>
                             <input type="date" class="form-control" id="birthday" name="birthday">
                         </div>
             
-                        cn: {{ object.cn }} <hr>
-                        sn: {{ object.sn }} <hr>
-                        givenName: {{ object.givenName }} <hr>
-                        name: {{ object.name }} <hr>
-                        mail: {{ object.mail }} <hr>
-                        title: {{ object.title }} <hr>
-                        description: {{ object.description }} <hr>
-                        physicalDeliveryOfficeName: {{ object.physicalDeliveryOfficeName }} <hr>
-                        telephoneNumber: {{ object.telephoneNumber }} <hr>
-                        displayName: {{ object.displayName }} <hr>
-                        company: {{ object.company }} <hr>
-                        department: {{ object.department }} <hr>
-                        objectCategory: {{ object.objectCategory }} <hr>
-                        sAMAccountName: {{ object.sAMAccountName }} <hr>
-                        userPrincipalName: {{ object.userPrincipalName }} <hr>
-                        displayName: {{ object.displayName }} <hr>
                     </div>
                 </div>
             </fieldset>
