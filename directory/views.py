@@ -92,7 +92,8 @@ class UserListView(ListView):
 
         con = ConnectActiveDirectory()
         users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail','userAccountControl',
-                                                    'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged', 'company', 'department', 'l', 'st', 'o'])
+                                                    'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged',
+                                                    'company', 'department', 'l', 'st', 'o'])
 
         # Create list with some attributes
         user_list = [
@@ -157,7 +158,7 @@ class UserDetailView(DetailView):
         filter = self.kwargs.get('username')
 
         con = ConnectActiveDirectory()
-        users = con.get_user(filter=filter, attrs=ENV['AD_USER_ATTRS'])
+        users = con.get_user(filter=filter, attrs=['*'])
         #print_object(users)
 
         if not users: return None
