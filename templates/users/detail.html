@@ -5,89 +5,212 @@
 <div class="container mt-3">
     <h1>{% trans 'User Detail' %}</h1>
     <div class="card">
-        <div class="card-header bg-primary text-white mx-auto">
-            {{ object.sAMAccountName }} - {{ object.cn }} - {{ object.mail }}
+        <div class="card-header bg-dark text-white">
+            <strong>Attention:</strong> all changes will be auditable
         </div>
         <div class="card-body bg-light text-dark">
 
             <fieldset class="border rounded-3 p-3">
-                <legend class="bg-primary text-white text-center">{{ object.sAMAccountName }}</legend>
+                <legend class="bg-primary text-white text-center"><i class="fa fa-solid fa-user" style="color: #FFD43B;"></i> {{ object.sAMAccountName }} - {{ object.cn }}</legend>
 
+                <!-- TAB index -->
                 <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
+                      <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general-tab-pane" type="button" role="tab" aria-controls="general-tab-pane" aria-selected="true">General</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
+                      <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member-tab-pane" type="button" role="tab" aria-controls="member-tab-pane" aria-selected="false">Member Of</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+                      <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address-tab-pane" type="button" role="tab" aria-controls="address-tab-pane" aria-selected="false">Address</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                      <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#account-tab-pane" type="button" role="tab" aria-controls="account-tab-pane" aria-selected="false">Account</button>
                     </li>
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                        <div class="mb-3">
-                            <label for="givenName" class="form-label">First name:</label>
-                            <input type="text" class="form-control" id="givenName" name="givenName" value="{{ object.givenName }}">
+
+                    <!-- TAB general -->
+                    <div class="tab-pane show active" id="general-tab-pane" role="tabpanel" aria-labelledby="general-tab" tabindex="0">
+
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="mb-3">
+                                    <label for="givenName" class="form-label">First name:</label>
+                                    <input type="text" class="form-control" id="givenName" name="givenName" value="{{ object.givenName }}">
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="mb-3">
+                                    <label for="sn" class="form-label">Last name:</label>
+                                    <input type="text" class="form-control" id="sn" name="sn" value="{{ object.sn }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="initials" class="form-label">Initials:</label>
+                                    <input type="text" class="form-control" id="initials" name="initials" value="{{ object.initials }}">
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="sn" class="form-label">Last name:</label>
-                            <input type="text" class="form-control" id="sn" name="sn" value="{{ object.sn }}">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="displayName" class="form-label">Display Name:</label>
+                                    <input type="text" class="form-control" id="displayName" name="displayName" value="{{ object.displayName }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description:</label>
+                                    <input type="text" class="form-control" id="description" name="description" value="{{ object.description }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="physicalDeliveryOfficeName" class="form-label">Office:</label>
+                                    <input type="text" class="form-control" id="physicalDeliveryOfficeName" name="physicalDeliveryOfficeName" value="{{ object.physicalDeliveryOfficeName }}">
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="mail" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="mail" name="mail" value="{{ object.mail }}">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="telephoneNumber" class="form-label">Telefone Number:</label>
+                                    <input type="text" class="form-control" id="telephoneNumber" name="telephoneNumber" value="{{ object.telephoneNumber }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="mail" class="form-label">Email:</label>
+                                    <input type="email" class="form-control" id="mail" name="mail" value="{{ object.mail }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="employeeNumber" class="form-label">Employee Number:</label>
+                                    <input type="text" class="form-control" id="employeeNumber" name="employeeNumber" value="{{ object.employeeNumber }}">
+                                </div>
+                            </div>
                         </div>
-                        company: {{ object.company }} <hr>
-                        department: {{ object.department }} <hr>
-                        telephoneNumber: {{ object.telephoneNumber }} <hr>
-                        cn: {{ object.cn }} <hr>
-                        name: {{ object.name }} <hr>
-                        title: {{ object.title }} <hr>
-                        description: {{ object.description }} <hr>
-                        physicalDeliveryOfficeName: {{ object.physicalDeliveryOfficeName }} <hr>
-                        displayName: {{ object.displayName }} <hr>
-                        sAMAccountName: {{ object.sAMAccountName }} <hr>
-                        userPrincipalName: {{ object.userPrincipalName }} <hr>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="company" class="form-label">Company:</label>
+                                    <input type="text" class="form-control" id="company" name="company" value="{{ object.company }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="department" class="form-label">Department:</label>
+                                    <input type="text" class="form-control" id="department" name="department" value="{{ object.department }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="info" class="form-label">Notes:</label>
+                            <textarea type="text" class="form-control" id="info" name="info" value="{{ object.info }}" rows="5"></textarea>
+                        </div>
                     </div>
 
-                    <div class="tab-pane" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
-                        <select multiple name="group1" class="form-select" id="group1" size="15" >
-                            {% for group in object.memberOf %}
-                            <option>{{ group }}</option>
-                            {% endfor %}
-                        </select>
+                    <!-- TAB Member -->
+                    <div class="tab-pane" id="member-tab-pane" role="tabpanel" aria-labelledby="member-tab" tabindex="0">
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
+                                <select multiple name="group1" class="form-select" id="group1" size="15" >
+                                    {% for group in object.memberOf %}
+                                    <option>{{ group }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <label for="group1" class="form-label">Other Groups:</label>
+                                <select multiple name="group2" class="form-select" id="group2" size="15" >
+                                    {% for group in object.memberOf %}
+                                    <option>{{ group }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div class="tab-pane" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                        contact-tab...
+                    <!-- TAB Address -->
+                    <div class="tab-pane" id="address-tab-pane" role="tabpanel" aria-labelledby="address-tab" tabindex="0">
+
+                        <div class="mb-3">
+                            <label for="streetAddress" class="form-label">Street Address:</label>
+                            <textarea type="text" class="form-control" id="streetAddress" name="streetAddress" value="{{ object.streetAddress }}" rows="5" ></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="l" class="form-label">City:</label>
+                                    <input type="text" class="form-control" id="l" name="l" value="{{ object.l }}">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="st" class="form-label">State:</label>
+                                    <input type="text" class="form-control" id="st" name="st" value="{{ object.st }}">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <div class="mb-3">
+                                    <label for="countryCode" class="form-label">Country:</label>
+                                    <input type="text" class="form-control" id="countryCode" name="countryCode" value="{{ object.countryCode }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="postalCode" class="form-label">Postal code:</label>
+                                    <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{ object.postalCode }}">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="postOfficeBox" class="form-label">P.O.Box:</label>
+                                    <input type="text" class="form-control" id="postOfficeBox" name="postOfficeBox" value="{{ object.postOfficeBox }}">
+                                </div>
+                            </div>
+                        </div>                    
+
                     </div>
 
-                    <div class="tab-pane" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                        disabled-tab...
+                    <!-- TAB Account -->
+                    <div class="tab-pane" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab" tabindex="0">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="userPrincipalName" class="form-label">User logon name:</label>
+                                    <input type="text" class="form-control" id="userPrincipalName" name="userPrincipalName" value="{{ object.userPrincipalName }}" disabled>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="sAMAccountName" class="form-label">User logon name(pre-Windows 2000):</label>
+                                    <input type="text" class="form-control" id="sAMAccountName" name="sAMAccountName" value="{{ object.sAMAccountName }}" disabled>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
-                <hr>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="birthday" class="form-label">Birthday:</label>
-                            <input type="date" class="form-control" id="birthday" name="birthday">
-                        </div>
-            
-                    </div>
-                </div>
             </fieldset>
             <input type="submit" class="btn btn-primary" value="Submit">
         </div> 
@@ -95,5 +218,6 @@
             Footer
         </div>
     </div>
+
 </div>
 {% endblock %}
