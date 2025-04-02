@@ -4,14 +4,17 @@
 {% block content %}
 <div class="container mt-3">
     <h1>{% trans 'User Detail' %}</h1>
+
     <div class="card">
-        <div class="card-header bg-dark text-white">
-            <strong>Attention:</strong> all changes will be auditable
+
+        <div class="card-header text-bg-warning text-center">
+            <strong>Attention:</strong> All changes will be logged and auditable.
         </div>
-        <div class="card-body bg-light text-dark">
+
+        <div class="card-body text-bg-light">
 
             <fieldset class="border rounded-3 p-3">
-                <legend class="bg-primary text-white text-center"><i class="fa fa-solid fa-user" style="color: #FFD43B;"></i> {{ object.sAMAccountName }} - {{ object.cn }}</legend>
+                <legend class="bg-primary text-white text-center"><i class="fa fa-solid fa-user" style="color: #FFD43B;"></i> {{ object.sAMAccountName }}</legend>
 
                 <!-- TAB index -->
                 <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
@@ -19,7 +22,7 @@
                       <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general-tab-pane" type="button" role="tab" aria-controls="general-tab-pane" aria-selected="true">General</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member-tab-pane" type="button" role="tab" aria-controls="member-tab-pane" aria-selected="false">Member Of</button>
+                      <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member-tab-pane" type="button" role="tab" aria-controls="member-tab-pane" aria-selected="false">Groups</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address-tab-pane" type="button" role="tab" aria-controls="address-tab-pane" aria-selected="false">Address</button>
@@ -41,7 +44,7 @@
                                     <input type="text" class="form-control" id="givenName" name="givenName" value="{{ object.givenName }}">
                                 </div>
                             </div>
-                            <div class="col-7">
+                            <div class="col-6">
                                 <div class="mb-3">
                                     <label for="sn" class="form-label">Last name:</label>
                                     <input type="text" class="form-control" id="sn" name="sn" value="{{ object.sn }}">
@@ -53,6 +56,12 @@
                                     <input type="text" class="form-control" id="initials" name="initials" value="{{ object.initials }}">
                                 </div>
                             </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Title:</label>
+                                    <input type="text" class="form-control" id="title" name="title" value="{{ object.title }}">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -62,12 +71,12 @@
                                     <input type="text" class="form-control" id="displayName" name="displayName" value="{{ object.displayName }}">
                                 </div>
                             </div>
-                            <div class="col">
+                            <!-- <div class="col">
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description:</label>
                                     <input type="text" class="form-control" id="description" name="description" value="{{ object.description }}">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="physicalDeliveryOfficeName" class="form-label">Office:</label>
@@ -95,6 +104,12 @@
                                     <input type="text" class="form-control" id="employeeNumber" name="employeeNumber" value="{{ object.employeeNumber }}">
                                 </div>
                             </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="employeeType" class="form-label">Employee Type:</label>
+                                    <input type="text" class="form-control" id="employeeType" name="employeeType" value="{{ object.employeeType }}">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -114,7 +129,7 @@
 
                         <div class="mb-3">
                             <label for="info" class="form-label">Notes:</label>
-                            <textarea type="text" class="form-control" id="info" name="info" value="{{ object.info }}" rows="5"></textarea>
+                            <textarea class="form-control" name="info" id="info" rows="3">{{ object.info }}</textarea>
                         </div>
                     </div>
 
@@ -123,7 +138,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <label for="group1" class="form-label">MemberOf (hold shift to select more than one):</label>
+                                <label for="group1" class="form-label">Groups (hold shift to select more than one):</label>
                                 <select multiple name="group1" class="form-select" id="group1" size="15" >
                                     {% for group in object.memberOf %}
                                     <option>{{ group }}</option>
@@ -149,7 +164,7 @@
 
                         <div class="mb-3">
                             <label for="streetAddress" class="form-label">Street Address:</label>
-                            <textarea type="text" class="form-control" id="streetAddress" name="streetAddress" value="{{ object.streetAddress }}" rows="5" ></textarea>
+                            <textarea class="form-control" name="streetAddress" id="streetAddress" rows="5">{{ object.streetAddress }}</textarea>
                         </div>
 
                         <div class="row">
@@ -167,8 +182,8 @@
                             </div>
                             <div class="col-1">
                                 <div class="mb-3">
-                                    <label for="countryCode" class="form-label">Country:</label>
-                                    <input type="text" class="form-control" id="countryCode" name="countryCode" value="{{ object.countryCode }}">
+                                    <label for="c" class="form-label">Country:</label>
+                                    <input type="text" class="form-control" id="c" name="c" value="{{ object.c }}">
                                 </div>
                             </div>
                         </div>
@@ -207,17 +222,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="cn" class="form-label">Comom Name:</label>
+                                    <input type="text" class="form-control" id="cn" name="cn" value="{{ object.cn }}" disabled>
+                                </div>
+                            </div>    
+                        </div>
                     </div>
-
                 </div>
 
             </fieldset>
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </div> 
-        <div class="card-footer bg-secondary text-white">
-            Footer
+    
         </div>
-    </div>
 
+        <div class="card-footer text-bg-danger text-center">
+            Before saving, make sure that all the fields are filled correctly.
+        </div>
+
+    </div>
+    <div class="container m-3 text-center">
+        <input type="submit" class="btn btn-success" value="Save">
+        <input type="submit" class="btn btn-warning" value="Cancel">
+    </div>
 </div>
 {% endblock %}
