@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.11] - 2025-04-04
+
+### Added/Changed/Removed
+- Improve get_user_model
+- First users/detail.html with good visual
+
 ## [0.0.10] - 2025-03-09
 
 ### Added/Changed/Removed

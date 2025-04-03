@@ -176,6 +176,9 @@ python manage.py createsuperuser --username djangoadmin --email djangoadmin@seud
 python manage.py runserver
 
 ```
+### Screenshots
+
+![User-Detail](screenshots/User-Detail.png)
 
 ### Testing
 
