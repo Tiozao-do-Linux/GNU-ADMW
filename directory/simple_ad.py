@@ -127,7 +127,7 @@ class ConnectActiveDirectory:
         else:
             base = self.ad_session.get_domain_search_base()
 
-        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (| (sAMAccountName={filter}) (cn={filter}) (givenName={filter}*) (sn={filter}) (mail={filter}) (company={filter}) (department={filter}) (employeeNumber={filter}) ) )'
+        search_filter=f'(& (objectClass=user) (!(objectClass=computer)) (| (sAMAccountName={filter}) (cn={filter}) (givenName={filter}*) (sn={filter}*) (mail={filter}) (company={filter}) (department={filter}) (employeeNumber={filter}) ) )'
 
         logger.info(f'# get_users( {filter}, {base}, {attrs})')
 
