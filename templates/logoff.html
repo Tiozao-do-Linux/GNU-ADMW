@@ -7,8 +7,11 @@
     <hr>
 </div>
 
-<form action="{% url 'logout' %}" method="post">{% csrf_token %}
-    <p>{% trans "Are you sure you want to log out?" %}</p>
-    <button type="submit" class="btn btn-warning ms-2"><i class="fa fa-fw fa-power-off"></i> Confirm Log Out</button>
-</form>
+<div class="container text-center">
+    <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+        <p>{% trans "Are you sure you want to log out?" %}</p>
+        <button type="submit" class="btn btn-warning ms-2"><i class="fa fa-fw fa-power-off"></i> Confirm Log Out</button>
+    </form>
+</div>
+
 {% endblock %}
