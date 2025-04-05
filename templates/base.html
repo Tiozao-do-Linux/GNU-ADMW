@@ -24,8 +24,14 @@
       <!-- messages -->
       {% if messages %}
       <div class="container mt-3">
+        <!-- <p><strong>Houston, we have a problem.</strong></p> -->
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger alert-dismissible fade show">
+          {% else %}
+          <div class="alert alert-{{ message.tags }} info alert-dismissible fade show">
+          {% endif %}
+          <!-- <p>Level: {{ message.level }}</p> -->
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -40,5 +46,9 @@
       {% now "Y" as current_year %}
       Copyright {{ current_year }} - For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a> <a href="#page-top">^</a>
     </footer>
+    <footer style="text-align:center; font-size:0.9em; margin-top:20px;">
+      <p>{{ info_now }} - {{ info_browser }} - {{ infor_remote_ip }}</p>
+  </footer>
+  
   </body>
 </html>

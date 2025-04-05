@@ -37,7 +37,7 @@ python -m venv .venv
 pip install -r requirements.txt
 
 # Or install each one
-pip install django ms_active_directory python-decouple python-dotenv crispy-bootstrap5 django-crispy-forms
+pip install django ms_active_directory python-decouple python-dotenv crispy-bootstrap5 django-crispy-forms user-agents
 ```
 
 ## Setup Environment
