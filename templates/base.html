@@ -41,14 +41,16 @@
       <!-- Content -->
       {% block content %}{% endblock %}
     </main>
+    <!-- Additional Information -->
+    <div class="container text-center text-bg-light small mt-5">
+      Now : <strong>{% now "Y-m-d G:i:s" %}</strong> | Browser: <strong>{{ browser_info }}</strong> | Your IP: <strong>{{ remote_ip }}</strong> | Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
+    </div>
     <!-- Footer Fixed -->
-    <footer class="container-fluid text-center text-bg-dark small mt-5">
-      {% now "Y" as current_year %}
-      Copyright {{ current_year }} - For more information about this project, please visit the <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a> <a href="#page-top">^</a>
+    <footer class="container-fluid text-center text-bg-dark small mt-2">
+      {% now "Y" as current_year %} Copyright {{ current_year }} 
+      - For more information about this project, please visit the 
+      <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a> <a href="#page-top">^</a>
     </footer>
-    <footer style="text-align:center; font-size:0.9em; margin-top:20px;">
-      <p>{% now "Y-m-d G:i:s" %} | {{ info_browser }} | {{ info_remote_ip }} | {{ render_time|default:"render_time" }}</p>
-  </footer>
   
   </body>
 </html>

@@ -1,30 +1,34 @@
+from user_agents import parse
 import time
-# from django.template.response import TemplateResponse
-# from django.utils.deprecation import MiddlewareMixin
 
-
-class RenderTimeMiddleware(object):
-    """
-    Middleware to measure the time it takes to render a template response.
-    """
+class RenderTimeAndBrowserMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        print("Antes da view")
-        begin_time = time.time()
+        request._start_time = time.time()
 
-        # Process the request
-        response = self.get_response(request)
+        # Detect browser, version and OS
+        user_agent_str = request.META.get('HTTP_USER_AGENT', '')
+        user_agent = parse(user_agent_str)
+        request._browser_info = f"{user_agent.browser.family} / {user_agent.browser.version_string} / {user_agent.os.family} /"
 
-        print("Depois da view")
+        # Remote IP
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            request._remote_ip = x_forwarded_for.split(',')[0].strip()
+        else:
+            request._remote_ip = request.META.get('REMOTE_ADDR', 'Unknow')
+
+        return self.get_response(request)
+
+    def process_template_response(self, request, response):
         end_time = time.time()
-        render_time = end_time - begin_time
-        # print(f'Render Time: {render_time}')
 
-        if hasattr(response, 'context_data'):
-            response.context_data['render_time'] = render_time
-            print(f'response.context_data["render_time"]: {response.context_data["render_time"]}')
- 
+        response.context_data['render_time'] = end_time - getattr(request, '_start_time', end_time)
+        response.context_data['browser_info'] = getattr(request, '_browser_info', 'Unknow')
+        response.context_data['remote_ip'] = getattr(request, '_remote_ip', 'Unknow')
+
         return response
+
  
