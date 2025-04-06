@@ -3,33 +3,32 @@
 
 {% block content %}
 <div class="container mt-3">
-    <h1>{% trans 'Users' %}</h1>
-    <hr>
+    <div class="row">
+        <div class="col-1">
+            <h1>{% trans 'Users' %}</h1>
+        </div>
+        <div class="col">
+            <div class="container">
+                <form action="?" method="GET">
+                    <input type="text" name="filter" placeholder="Dont Use wildcards (*)" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a href="{% url 'user_list' %}" class="btn btn-warning">Clear</a>
+                    <a href="#{ % url 'user_create' %}" class="btn btn-danger">Create New</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="container">
-    <form action="?" method="GET">
-        <input type="text" name="filter" placeholder="Dont Use wildcards (*)" id="" value="{{ request.GET.filter }}" class="p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" autocomplete="off">
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a href="{% url 'user_list' %}" class="btn btn-warning">Clear</a>
-        <a href="#{ % url 'user_create' %}" class="btn btn-danger">Create New</a>
-    </form>
-    
-    <hr>
-</div>
 
 <div class="container-fluid card">
-    <div class="card-header bg-secondary text-white">
+    {% if object_list|length > 100 %}
+    <div class="card-header bg-success text-white">
         <small>
-        Start on <strong>({{ start_date|date:"Y-m-d G:i:s,u" }})</strong>
-        {% if object_list|length > 100 %}
-        - Showing 100 of <strong>{{ object_list|length }}</strong>
-         - Hint: <strong></strong>Refine your search</strong>
-        {% else %}
-        - Showing <strong>{{ object_list|length }}</strong>
-        {% endif %}
+            Showing 100 of <strong>{{ object_list|length }}</strong> - Hint: <strong></strong>Refine your search</strong>
         </small>
     </div>
+    {% endif %}
 
     <div class="card-body">
         <div class="table-responsive">
@@ -111,13 +110,13 @@
         </div>
     </div>
 
-    <div class="card-footer bg-secondary text-white">
+    <!-- <div class="card-footer bg-secondary text-white">
         <small>
         {% now "Y-m-d G:i:s,u" as todays_date %}
         Finished on <strong>( {{ todays_date  }} )</strong> - 
         Generated in <strong>{{ render_time|floatformat:6 }} seconds</strong>
         </small>
-    </div>
+    </div> -->
 
 </div>
 {% endblock %}

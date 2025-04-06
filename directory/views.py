@@ -1,18 +1,10 @@
-#from django.conf import settings
-from ms_active_directory import ADDomain, ADUser, ADGroup
-from django.views.generic import TemplateView, ListView, DetailView
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.core.paginator import Paginator
-from django.utils import timezone
-import datetime
-
+# from django.conf import settings
 from core.settings import ENV
-#from .models import ADUser, ADGroup, AuditLog
-from .forms import UserCreationForm, UserModificationForm
 
-from directory.simple_ad import ConnectActiveDirectory, print_object, userAccountControl_is_enabled, extract_ou
+from django.views.generic import TemplateView, ListView, DetailView
+from django.contrib import messages
+from django.utils import timezone
+from directory.simple_ad import ConnectActiveDirectory, userAccountControl_is_enabled, extract_ou
 
 env_context = {
     'ad_domain' : ENV['AD_DOMAIN'],
@@ -45,11 +37,8 @@ class AboutPageView(TemplateView):
 class HelpPageView(TemplateView):
     template_name = 'help.html'
 
-# class LoginView(TemplateView):
-#     template_name = 'login.html'
-#     # def get_context_data(self, **kwargs):
-#     #     context = super().get_context_data(**kwargs)
-#     #     return context
+class LoginView(TemplateView):
+    template_name = 'login.html'
 
 class LogoffView(TemplateView):
     template_name = 'logoff.html'
@@ -67,33 +56,50 @@ class UserListView(ListView):
     #     context["start_date"] = timezone.now()
     #     return context
 
-    def dispatch(self, request, *args, **kwargs):
-        start_time = datetime.datetime.now()  # Begin time
+    # def dispatch(self, request, *args, **kwargs):
+    #     start_time = datetime.datetime.now()  # Begin time
 
-        response = super().dispatch(request, *args, **kwargs)
+    #     response = super().dispatch(request, *args, **kwargs)
 
-        end_time = datetime.datetime.now()  # End time
+    #     end_time = datetime.datetime.now()  # End time
 
-        render_time = (end_time - start_time).total_seconds()  # Time difference
+    #     render_time = (end_time - start_time).total_seconds()  # Time difference
 
-        # Add the render time to the context
-        if hasattr(response, 'context_data'):
-            response.context_data['render_time'] = render_time
-            response.context_data['start_date'] = start_time
-            response.context_data['end_date'] = end_time
+    #     # Add the render time to the context
+    #     if hasattr(response, 'context_data'):
+    #         response.context_data['render_time'] = render_time
+    #         response.context_data['start_date'] = start_time
+    #         response.context_data['end_date'] = end_time
 
-        return response
+    #     return response
 
     def get_queryset(self):
         
         filter = self.request.GET.get('filter')
-        if not filter or '*' in filter:
+
+        if not filter: return None
+
+        if '*' in filter:
+            # # messages.set_level(self.request, messages.DEBUG)
+            # # messages.debug(self.request, "This is a debug message.")
+            messages.warning(self.request, "Remove the character '*' from filter.")
+            # # messages.success(self.request, "This is a success message.")
+            # # messages.warning(self.request, "This is a warning message.")
+            # # messages.error(self.request, "This is an error message.")
             return None
 
         con = ConnectActiveDirectory()
+        if not con.ad_session:
+            messages.error(self.request, f"Inside views.py: Unable to connect to Active Directory: {con}")
+            return None
+        # else:
+        #     messages.info(self.request, f"Connected to Active Directory: {con}")
+
         users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail','userAccountControl',
                                                     'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged',
                                                     'company', 'department', 'l', 'st', 'o'])
+
+        if not users: return None
 
         # Create list with some attributes
         user_list = [
@@ -158,6 +164,8 @@ class UserDetailView(DetailView):
         filter = self.kwargs.get('username')
 
         con = ConnectActiveDirectory()
+        if not con: return None
+
         users = con.get_user(filter=filter, attrs=['*'])
         #print_object(users)
 

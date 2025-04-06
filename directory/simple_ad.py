@@ -1,8 +1,13 @@
 """
 This module facilitates interaction with AD using ms_active_directory
 """
+from core.config import ENV
+from ms_active_directory import ADDomain, ADUser, ADGroup, ADObject
+# from django.contrib import messages
+from typing import List
 import logging
 logger = logging.getLogger(__name__)
+import json
 
 def userAccountControl_is_enabled(uAC: int) -> bool:
     """
@@ -22,7 +27,7 @@ def extract_ou(dn: str) -> str:
     ou_parts = [part[3:] for part in parts if part.startswith(('OU=','CN='))]
     return ' > '.join(ou_parts)
 
-import json
+
 def print_object(object):
     if object:
         object = vars(object)
@@ -33,15 +38,10 @@ def print_object(object):
         print(json.dumps(dict(object['all_attributes']), ensure_ascii=False, indent=3))
         print(f'-'*80)
 
-from core.config import ENV
-
-from ms_active_directory import ADDomain, ADUser, ADGroup, ADObject
-
-from typing import List
 
 class ConnectActiveDirectory:
     def __init__(self):
-        
+
         self.domain = ENV['AD_DOMAIN']
         self.server = ENV['AD_SERVER']
         self.user = ENV['AD_ADMIN_USER']
@@ -53,31 +53,25 @@ class ConnectActiveDirectory:
 
         self.ad_domain = None
         self.ad_session = None
-        # self.ldap_session = None
 
         if not self.domain or not self.server or not self.user or not self.password:
             logger.critical(f'# Auth Error ##: Missing AD credentials')
             return None
 
         try:
-            logger.debug(f'# Connect to Active Directory without discover by DNS') 
+            logger.debug(f'# Connect to Domain: {self.domain} on Ldap Server: {self.server}')
             self.ad_domain = ADDomain(self.domain, ldap_servers_or_uris=[self.server], discover_kerberos_servers=False, discover_ldap_servers=False)
-            logger.debug(f'# Authenticate with account service with admin rights')
+            logger.debug(f'# Authenticate with {self.user} with admin rights')
             self.ad_session = self.ad_domain.create_session_as_user(user=self.user, password=self.password)
-            # session_user = self.ad_session.who_am_i()
-            # print(f'# Authenticated as: {session_user}')
-
-            # self.ldap_session = self.ad_domain.create_ldap_connection_as_user(user=self.user, password=self.password)
-            # if self.ldap_session: print(f'## LDAP Session: {self.ldap_session} ##')
-
         except Exception as e:
             logger.critical(f'# Auth Error ##: {self.user} - {str(e)}')
+
             return None
 
 
     def __str__(self):
-        return f"{self.domain} - {self.server} - {self.user}"
-    
+        return f"{self.domain} : {self.server} : {self.user}"
+
 
     def get_session(self):
         return self.ad_session
