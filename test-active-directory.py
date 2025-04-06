@@ -1,6 +1,5 @@
 from core.config import ENV
-
-from ms_active_directory import ADDomain
+from directory.simple_ad import ConnectActiveDirectory, print_object
 
 AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
 AD_GROUP_REQUIRED = ENV['AD_GROUP_REQUIRED']
@@ -8,29 +7,19 @@ AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
 AD_USER_ATTRS = ENV['AD_USER_ATTRS'] 
 AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 
-
 print(f'##############################################')
-from directory.simple_ad import ConnectActiveDirectory, print_object
 con = ConnectActiveDirectory()
-if con: print(con)
+if con.ad_session: print(con)
 
-print(f'##############################################')
-Filter_Users='*it*'
-users = con.get_users(filter=Filter_Users, attrs=['memberOf'])
-if not users:
-    print(f'## Users: "{Filter_Users}" NOT found')
-else:
-    for user in users:
-        print_object(user)
+# print(f'##############################################')
+# Filter_Users='Tiozao'
+# users = con.get_users(filter=Filter_Users, attrs=['memberOf'])
+# if not users:
+#     print(f'## Users: "{Filter_Users}" NOT found')
+# else:
+#     for user in users:
+#         print_object(user)
 
-print(f'##############################################')
-Filter_Groups='*monica*'
-groups = con.get_groups(filter=Filter_Groups, attrs=['member'])
-if not groups:
-    print(f'## Groups: "{Filter_Groups}" NOT found')
-else:
-    for group in groups:
-        print_object(group)
 
 print(f'##############################################')
 Filter_Group_DN=AD_GROUP_REQUIRED
@@ -49,7 +38,7 @@ else:
     print_object(group)
 
 print(f'##############################################')
-Filter_User='monic*'
+Filter_User='tiozao'
 user = con.get_user(filter=Filter_User)
 if not user:
     print(f'## User: "{Filter_User}" NOT found')
