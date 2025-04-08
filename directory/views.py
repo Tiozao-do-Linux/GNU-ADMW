@@ -51,27 +51,6 @@ class LogoffView(TemplateView):
 class UserListView(ListView):
     template_name = 'users/list.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["start_date"] = timezone.now()
-    #     return context
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     start_time = datetime.datetime.now()  # Begin time
-
-    #     response = super().dispatch(request, *args, **kwargs)
-
-    #     end_time = datetime.datetime.now()  # End time
-
-    #     render_time = (end_time - start_time).total_seconds()  # Time difference
-
-    #     # Add the render time to the context
-    #     if hasattr(response, 'context_data'):
-    #         response.context_data['render_time'] = render_time
-    #         response.context_data['start_date'] = start_time
-    #         response.context_data['end_date'] = end_time
-
-    #     return response
 
     def get_queryset(self):
         
@@ -80,20 +59,13 @@ class UserListView(ListView):
         if not filter: return None
 
         if '*' in filter:
-            # # messages.set_level(self.request, messages.DEBUG)
-            # # messages.debug(self.request, "This is a debug message.")
             messages.warning(self.request, "Remove the character '*' from filter.")
-            # # messages.success(self.request, "This is a success message.")
-            # # messages.warning(self.request, "This is a warning message.")
-            # # messages.error(self.request, "This is an error message.")
             return None
 
         con = ConnectActiveDirectory()
         if not con.ad_session:
-            messages.error(self.request, f"Inside views.py: Unable to connect to Active Directory: {con}")
+            messages.error(self.request, f"Unable to connect to Active Directory: {con}")
             return None
-        # else:
-        #     messages.info(self.request, f"Connected to Active Directory: {con}")
 
         users = con.get_users(filter=filter, attrs=['sAMAccountName','givenName','sn','mail','userAccountControl',
                                                     'lastLogonTimestamp','pwdLastSet','whenCreated','whenChanged',
@@ -130,22 +102,19 @@ class UserListView(ListView):
 
 class GroupListView(ListView):
     template_name = 'groups/list.html'
-    #model = ADGroup
-    # object_list -> ADGroup.objects.all()
+
     def get_queryset(self):
         pass
 
 class ComputerListView(ListView):
     template_name = 'computers/list.html'
-    #model = ADGroup
-    # object_list -> ADGroup.objects.all()
+
     def get_queryset(self):
         pass
 
 class OrganizationListView(ListView):
     template_name = 'organizations/list.html'
-    #model = ADGroup
-    # object_list -> ADGroup.objects.all()
+
     def get_queryset(self):
         pass
 
@@ -154,20 +123,14 @@ class OrganizationListView(ListView):
 
 class UserDetailView(DetailView):
     template_name = 'users/detail.html'
-    #model = ADUser
-    # object -> ADUser.objects.get(pk=id)
-
-    # def get_queryset(self):
-    #     pass
 
     def get_object(self, queryset=None):
         filter = self.kwargs.get('username')
 
         con = ConnectActiveDirectory()
-        if not con: return None
+        if not con.ad_session: return None  # TODO redirect to error page
 
         users = con.get_user(filter=filter, attrs=['*'])
-        #print_object(users)
 
         if not users: return None
 

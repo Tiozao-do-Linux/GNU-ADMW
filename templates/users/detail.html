@@ -138,7 +138,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <label for="group1" class="form-label">Groups (hold shift to select more than one):</label>
+                                <label for="group1" class="form-label">Groups:</label>
                                 <select multiple name="group1" class="form-select" id="group1" size="15" >
                                     {% for group in object.memberOf %}
                                     <option>{{ group }}</option>
@@ -211,6 +211,15 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
+                                    <label for="distinguishedName" class="form-label">Distinguished Name (DN):</label>
+                                    <input type="text" class="form-control" id="distinguishedName" name="distinguishedName" value="{{ object.distinguishedName }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
                                     <label for="userPrincipalName" class="form-label">User logon name:</label>
                                     <input type="text" class="form-control" id="userPrincipalName" name="userPrincipalName" value="{{ object.userPrincipalName }}" disabled>
                                 </div>
@@ -222,6 +231,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
