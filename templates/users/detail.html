@@ -145,13 +145,18 @@
                                     {% endfor %}
                                 </select>
                             </div>
-
+                            <!-- Button to move -->
+                            <div class="col-md-2 d-flex flex-column justify-content-center align-items-center gap-2">
+                                <button type="button" class="btn btn-outline-danger" onclick="move('group1', 'group2')">
+                                <i class="bi bi-arrow-right"> Del </i> →
+                                </button>
+                                <button type="button" class="btn btn-outline-success" onclick="move('group2', 'group1')">
+                                <i class="bi bi-arrow-left"> Add </i> ←
+                                </button>
+                            </div>
                             <div class="col">
                                 <label for="group1" class="form-label">Other Groups:</label>
                                 <select multiple name="group2" class="form-select" id="group2" size="15" >
-                                    {% for group in object.memberOf %}
-                                    <option>{{ group }}</option>
-                                    {% endfor %}
                                 </select>
                             </div>
 
@@ -263,4 +268,16 @@
         <input type="submit" class="btn btn-warning" value="Cancel">
     </div>
 </div>
+<script>
+    function move(origemId, destinoId) {
+      const origem = document.getElementById(origemId);
+      const destino = document.getElementById(destinoId);
+      const selecionados = Array.from(origem.selectedOptions);
+
+      selecionados.forEach(option => {
+        origem.removeChild(option);
+        destino.appendChild(option);
+      });
+    }
+  </script>
 {% endblock %}

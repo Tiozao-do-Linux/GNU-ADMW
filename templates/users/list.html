@@ -50,7 +50,7 @@
                 <tbody>
                     {% for user in object_list|slice:":30" %}
                     <tr>
-                        <td>{{ index }}</td>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.company }} - {{ user.department }}</td>
                         <td>{{ user.l }}/{{ user.st }}</td>
