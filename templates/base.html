@@ -20,6 +20,11 @@
     <!-- Navigation-->
     {% include 'navbar.html' %}
     </header>
+        <!-- Info -->
+        <div class="container-fluid text-center text-bg-light small">
+          Now : <strong>{% now "Y-m-d G:i:s" %}</strong> | Browser: <strong>{{ browser_info }}</strong> | Your IP: <strong>{{ remote_ip }}</strong> | Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
+        </div>
+    
     <main class="border border-success shadow-lg bg-white rounded-3">
       <!-- messages -->
       {% if messages %}
@@ -42,14 +47,10 @@
       {% block content %}{% endblock %}
     </main>
     <!-- Footer -->
-    <footer class="container-fluid text-center text-bg-dark small mt-5">
-      {% now "Y" as current_year %} Copyright {{ current_year }} 
-      - For more information about this project, please visit the 
+    <footer class="container-fluid text-center text-bg-dark small fixed-bottom">
+        {% now "Y" as current_year %} Copyright {{ current_year }} 
       <a href="https://github.com/jarbelix/GNU-ADMW" target="_blank"><i class="fa fa-solid fa-github"></i> GitHub repository</a> <a href="#page-top">^</a>
     </footer>
-    <!-- Additional Information -->
-    <div class="container text-center text-bg-light small mt-2 mb-5">
-      Now : <strong>{% now "Y-m-d G:i:s" %}</strong> | Browser: <strong>{{ browser_info }}</strong> | Your IP: <strong>{{ remote_ip }}</strong> | Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
-    </div>
+
   </body>
 </html>
