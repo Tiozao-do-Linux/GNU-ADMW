@@ -1,10 +1,11 @@
 # Generate fake entries for Active Directory
-# Certify that you have Faker installed before running the script. You can install it using pip install faker.
+# Certify that you have Faker and Unidecode installed before running the script. You can install it using "pip install faker unidecode".
 # Author: Jarbas
 # Date: 2023-06-26
 
 import sys
 import random
+from unidecode import unidecode
 
 from faker import Faker
 from faker.providers import person
@@ -29,64 +30,58 @@ telephoneNumber=physicalDeliveryOfficeName=c=l=st=streetAddress=''
 userAccountControl=objectCategory=''
 
 # Fixed
-objectCategory='CN=Person,CN=Schema,CN=Configuration,DC=seudominio,DC=com,DC=br'
 c='BR'
 st='MS'
-DC='DC=seudominio,DC=com,DC=br'
-DOMAIN='seudominio.com.br'
+DC='DC=seudominio,DC=com'
+DOMAIN='seudominio.com'
+objectCategory='CN=Person,CN=Schema,CN=Configuration,'+ DC
 
-existing_logins = set()
 
-fake = Faker()
+fake = Faker('pt_BR')
 fake.add_provider(person)
 
-def generate_cpf():
-    def calculate_digit(cpf):
-        total = 0
-        for i, digit in enumerate(cpf):
-            total += int(digit) * (10 - i)
-        remainder = total % 11
-        return str(11 - remainder) if remainder > 1 else '0'
 
-    cpf = [random.randint(0, 9) for _ in range(9)]
-    for _ in range(2):
-        cpf.append(calculate_digit(cpf))
-    return ''.join(map(str, cpf))
+existing_logins = set()
+def generate_unique_login():
+    givenName = fake.first_name()
+    sn = fake.last_name()
+    first = unidecode(givenName.split(' ')[0].lower())
+    len_last=len(sn.split(' '))
+    last = unidecode(sn.split(' ')[len_last-1].lower())
+    login = f"{first}.{last}"
 
-
-def generate_unique_login(existing_logins):
-    givenName = fake.first_name().lower()
-    sn = fake.last_name().lower()
-    login = f"{givenName}.{sn}"
     while login in existing_logins:
-        givenName = fake.first_name().lower()
-        sn = fake.last_name().lower()
-        login = f"{givenName}.{sn}"
+        givenName = fake.first_name()
+        sn = fake.last_name()
+        first = unidecode(givenName.split(' ')[0].lower())
+        len_last=len(sn.split(' '))
+        last = unidecode(sn.split(' ')[len_last-1].lower())
+        login = f"{first}.{last}"
+        
     existing_logins.add(login)
     return [login,givenName,sn]
 
 
-def generate_name_from_login(login):
-    parts = login.split('.')
-    capitalized_parts = [part.capitalize() for part in parts]
-    return ' '.join(capitalized_parts)
-
 def main(num_rows):
     for i in range(num_rows):
-        login,givenName,sn = generate_unique_login(existing_logins)
-        name = generate_name_from_login(login)
-        employeeNumber = generate_cpf()
+        login,givenName,sn = generate_unique_login()
+        name = f'{givenName} {sn}'
+        # employeeNumber = generate_cpf()
+        employeeNumber = fake.cpf()
         email = f'{login}@{DOMAIN}'
         department = random.choice(departments)
-        company = random.choice(companys)
-        employeeType = random.choice(employeeTypes)
-        title = random.choice(titles)
+        company = random.choice(companies)
+        employeeType = fake.job()
+        title = fake.prefix()
         telephoneNumber = random.choice(telephoneNumbers)
         userAccountControl = random.choice(userAccountControls)
         physicalDeliveryOfficeName = random.choice(physicalDeliveryOfficeNames)
-        info = random.choice(infos)
-        description = random.choice(descriptions)
-        streetAddress = f"Rua {random.randint(1, 100)}, {random.randint(1, 100)}"
+        info = fake.sentence()
+        description = fake.job()
+        streetAddress = fake.street_address()
+        # c = fake.country_code()
+        # l = fake.city()
+        # st = fake.state()
         l = random.choice(ls)
 
         print(f'''# Employee #{i+1}
@@ -95,17 +90,17 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: user
-cn: {login}
-sn: {sn.capitalize()}
+givenName: {givenName}
+sn: {sn}
 initials: {givenName[0].upper()}.{sn[0].upper()}.
+cn: {login}
 description: {description}
-givenName: {givenName.capitalize()}
 name: {name}
 sAMAccountName: {login}
 userPrincipalName: {login}@{DOMAIN}
 objectCategory: CN=Person,CN=Schema,CN=Configuration,{DC}
 mail: {email}
-displayName: {givenName.capitalize()} {sn.capitalize()} - {company}/{st}
+displayName: {givenName} {sn} - {company}/{st}
 employeeNumber: {employeeNumber}
 employeeType: {employeeType}
 l: {l}
@@ -115,7 +110,7 @@ telephoneNumber: {telephoneNumber}
 title: {title}
 info: {info}
 streetAddress: {streetAddress}
-o: {company}
+company: {company}
 department: {department}
 physicalDeliveryOfficeName: {physicalDeliveryOfficeName}
 userAccountControl: {userAccountControl}
