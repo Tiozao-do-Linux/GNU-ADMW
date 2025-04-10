@@ -18,6 +18,18 @@
             </div>
         </div>
     </div>
+    {% if not request.GET.filter %}
+    <div class="row">
+        <div class="col alert alert-success">
+            <strong>Filter Hints! Search by: </strong>
+            <p class="text-bg-light"><strong>Username</strong> or <strong>Login</strong> ==> <strong>maria.rocha, maria.alves</strong></p>
+            <p class="text-bg-light"><strong>Company</strong> or <strong>Department</strong> ==> <strong>Matriz, Filial 01, Filial 02</strong></p>
+            <p class="text-bg-light"><strong>Initials</strong> of <strong>Name|Surname</strong> ==> <strong>Jos, Jose, José, Maria, Ana</strong></p>
+            <p class="text-bg-light"><strong>Email</strong> ==> <strong>maria.cassiano@tiozaodolinux.com, dante.moura@tiozaodolinux.com</strong></p>
+            <p class="text-bg-light"><strong>Employee Number</strong> ==> <strong>253.768.901-12, 071.394.856-66</p>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 
@@ -79,7 +91,7 @@
                             </div>
                         </td>
                     </tr>
-                    <!-- Delete Modal -->
+                    <!-- Delete Modal -==> <strong>
                     <div class="modal fade" id="deleteModal{{ user.username }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
@@ -97,7 +109,7 @@
                               <form action="#{ % url 'user_delete' user.username %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <button type="button" class="btn btn-primary">Delete</button>
-                                <!-- <button type="submit" class="btn btn-danger">Delete</button> -->
+                                <!-- <button type="submit" class="btn btn-danger">Delete</button> -==> <strong>
                               </form>
                             </div>
                           </div>
@@ -120,7 +132,7 @@
         Finished on <strong>( {{ todays_date  }} )</strong> - 
         Generated in <strong>{{ render_time|floatformat:6 }} seconds</strong>
         </small>
-    </div> -->
+    </div> -==> <strong>
 
 </div>
 {% endblock %}
