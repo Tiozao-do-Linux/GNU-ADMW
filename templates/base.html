@@ -20,12 +20,13 @@
     <!-- Navigation-->
     {% include 'navbar.html' %}
     </header>
-        <!-- Info -->
-        <div class="container-fluid text-center text-bg-light small">
-          Now : <strong>{% now "Y-m-d G:i:s" %}</strong> | Browser: <strong>{{ browser_info }}</strong> | Your IP: <strong>{{ remote_ip }}</strong> | Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
-        </div>
+
+    <!-- Info -->
+    <div class="container-fluid text-center text-bg-light small">
+        Now : <strong>{% now "Y-m-d G:i:s" %}</strong> | Browser: <strong>{{ browser_info }}</strong> | Your IP: <strong>{{ remote_ip }}</strong> | Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
+    </div>
     
-    <main class="border border-success shadow-lg bg-white rounded-3">
+    <main class="border border-success shadow-lg bg-white rounded-3 m-3 mb-5">
       <!-- messages -->
       {% if messages %}
       <div class="container mt-3">
