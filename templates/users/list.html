@@ -91,7 +91,7 @@
                             </div>
                         </td>
                     </tr>
-                    <!-- Delete Modal -==> <strong>
+                    <!-- Delete Modal -->
                     <div class="modal fade" id="deleteModal{{ user.username }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
@@ -109,7 +109,7 @@
                               <form action="#{ % url 'user_delete' user.username %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <button type="button" class="btn btn-primary">Delete</button>
-                                <!-- <button type="submit" class="btn btn-danger">Delete</button> -==> <strong>
+                                <!-- <button type="submit" class="btn btn-danger">Delete</button> -->
                               </form>
                             </div>
                           </div>
@@ -132,7 +132,7 @@
         Finished on <strong>( {{ todays_date  }} )</strong> - 
         Generated in <strong>{{ render_time|floatformat:6 }} seconds</strong>
         </small>
-    </div> -==> <strong>
+    </div> -->
 
 </div>
 {% endblock %}
