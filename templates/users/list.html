@@ -102,45 +102,45 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.pwdLastSet }}</td>
                         <td>
-                            {% comment "Dont show html abbr" %}
-                            <abbr
-                                title="Created: {{ user.whenCreated }} | Changed: {{ user.whenChanged }} | Last Logon: {{ user.lastLogonTimestamp }} | Last Change Password: {{ user.pwdLastSet }}" class="initialism">
-                                Status: {{ user.status }}
-                            </abbr>
-                            {% endcomment %}
                             {% if user.status %}
-                                <button type="button" class="btn btn-sm btn-success">Active ({{ user.userAccountControl}})</button>
+                                Active
                             {% else %}
-                                <button type="button" class="btn btn-sm btn-danger">Disabled ({{ user.userAccountControl}})</button>
+                                Disabled
                             {% endif %}
                         </td>
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'user_detail' user.username %}" class="btn btn-sm btn-primary">Edit</a>
                                 <a href="#{ % url 'password_reset' user.username %}" class="btn btn-sm btn-warning">Reset Password</a>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.username }}">Delete</button>
+                                {% if user.status %}
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#disableModal{{ user.username }}">Disable</button>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#enableModal{{ user.username }}">Enable</button>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>
-                    <!-- Delete Modal -->
-                    <div class="modal fade" id="deleteModal{{ user.username }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
+                    <!-- Disable Modal -->
+                    <div class="modal fade" id="disableModal{{ user.username }}" data-bs-backdrop="static">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                           <div class="modal-content">
+                            <!-- Modal Header -->
                             <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="modalDeleteLabel">Confirm Delete</h1>
+                              <h1 class="modal-title">Confirm Disable</h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Modal body -->
                             <div class="modal-body">
-                              <p>Are you sure you want to <b class="text-danger">delete user {{ user.username }}</b>?</p>
-                              <h5 class="text-danger">This action cannot be undone.</h5>
-                              <h4>Not implemented yet</h4>
+                              <p>Are you sure you want to disable user <b class="text-danger">{{ user.username }}</b>?</p>
+                              <h4 class="text-success">Not implemented yet</h4>
                             </div>
+                            <!-- Modal footer -->
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                               <form action="#{ % url 'user_delete' user.username %}" method="post" class="d-inline">
                                 {% csrf_token %}
-                                <button type="button" class="btn btn-primary">Delete</button>
-                                <!-- <button type="submit" class="btn btn-danger">Delete</button> -->
+                                <button type="button" class="btn btn-primary">Disable</button>
+                                <!-- <button type="submit" class="btn btn-danger">Disable</button> -->
                               </form>
                             </div>
                           </div>

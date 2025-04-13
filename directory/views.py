@@ -2,6 +2,11 @@
 from core.settings import ENV
 
 from django.views.generic import TemplateView, ListView, DetailView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required, login_not_required
+
+
 from django.contrib import messages
 from django.utils import timezone
 from directory.simple_ad import ConnectActiveDirectory, userAccountControl_is_enabled, extract_ou
@@ -23,6 +28,7 @@ env_context = {
 ## Template Views
 #################
 
+
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
@@ -34,7 +40,7 @@ class AboutPageView(TemplateView):
     #     context["now"] = timezone.now()
     #     return context
 
-class HelpPageView(TemplateView):
+class HelpPageView(LoginRequiredMixin, TemplateView):
     template_name = 'help.html'
 
 class LoginView(TemplateView):
