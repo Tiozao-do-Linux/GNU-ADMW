@@ -101,13 +101,12 @@
                         <td>{{ user.givenName }} {{ user.sn }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.pwdLastSet }}</td>
-                        <td>
-                            {% if user.status %}
-                                Active
-                            {% else %}
-                                Disabled
-                            {% endif %}
-                        </td>
+                        {% if user.status %}
+                            <td class="table-success">Active</td>
+                        {% else %}
+                            <td class="table-danger">Disabled</td>
+                        {% endif %}
+
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'user_detail' user.username %}" class="btn btn-sm btn-primary">Edit</a>
