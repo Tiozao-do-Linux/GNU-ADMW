@@ -32,8 +32,8 @@ userAccountControl=objectCategory=''
 # Fixed
 c='BR'
 st='MS'
-DC='DC=seudominio,DC=com'
-DOMAIN='seudominio.com'
+DC='DC=tiozaodolinux,DC=com'
+DOMAIN='tiozaodolinux.com'
 objectCategory='CN=Person,CN=Schema,CN=Configuration,'+ DC
 
 
