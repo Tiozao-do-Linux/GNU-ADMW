@@ -18,7 +18,7 @@ SEARCH_BASE_GROUP = config('SEARCH_BASE_GROUP', default='OU=Groups,'+SEARCH_BASE
 GROUP_REQUIRED = config('GROUP_REQUIRED', default='CN=Turma da Monica,CN=Groups,'+SEARCH_BASE)
 GROUP_DENIED = config('GROUP_DENIED', default='CN=Deny,OU=Groups,'+SEARCH_BASE)
 
-from django.utils import timezone
+import datetime
 env_context = {
     'ad_domain' : DOMAIN,
     'ad_server' : SERVER,
@@ -30,5 +30,5 @@ env_context = {
     'ad_search_base_group' : SEARCH_BASE_GROUP,
     'ad_group_required' : GROUP_REQUIRED,
     'ad_group_denied' : GROUP_DENIED,
-    'now' : timezone.now(),
+    'now' : datetime.datetime.now(),
 }
