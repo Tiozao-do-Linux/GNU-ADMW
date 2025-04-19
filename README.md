@@ -55,36 +55,51 @@ cp env.example .env
 Udpate the settings to match your environment
 
 ```
-# Active Directory config
-AD_DOMAIN='seudominio.com.br'                       # your domain name
-AD_SERVER='ldaps://dc01.${AD_DOMAIN}'               # your server in format ldap:// (without secure) or ldaps:// (with secure)
-AD_ADMIN_USER='Administrator@${AD_DOMAIN}'          # you can use the userPrincipalName instead of the DN of the empowered user to change your AD
-AD_ADMIN_PASSWORD='SuperSecretPassword@2024'        # your password
 
-# CSV list attrs
-AD_USER_ATTRS='cn,sn,title,description,physicalDeliveryOfficeName,telephoneNumber,givenName,displayName,department,company,name,sAMAccountName,userPrincipalName,mail,loginShell,objectGUID,objectSid'
-AD_GROUP_ATTRS='cn,sn,description,name,sAMAccountName,member,objectGUID,objectSid'
+DOMAIN='seudominio.com.br'
+# your domain name
 
-# Base search
-AD_BASE='DC=seudominio,DC=com,DC=br'                # your DN base
-AD_BASE_USER='CN=Users,${AD_BASE}'                  # your DN base user
-AD_BASE_GROUP='CN=Groups,${AD_BASE}'                # your DN base group
+SERVER='ldaps://dc01.${DOMAIN}'
+# your server in format ldap:// (without secure) or ldaps:// (with secure)
 
-# Group restrictions
-AD_GROUP_REQUIRED='CN=Turma da Monica,${AD_BASE_USER}'  # your DN group with the user MUST be in
-AD_GROUP_DENIED='CN=Disabled,${AD_BASE_GROUP}'          # your DN group with the user NOT may be in
+ADMIN_USER='Administrator@${DOMAIN}'
+# you can use the userPrincipalName instead of the DN of the empowered user to change your AD
+
+ADMIN_PASSWORD='SuperSecretPassword@2024'
+# your password
+
+USER_ATTRS='cn,sn,title,description,physicalDeliveryOfficeName,telephoneNumber,givenName,displayName,department,company,name,sAMAccountName,userPrincipalName,mail,loginShell,objectGUID,objectSid'
+# User Atributes
+
+GROUP_ATTRS='cn,sn,description,name,sAMAccountName,member,objectGUID,objectSid'
+# Group Attributes
+
+SEARCH_BASE='DC=seudominio,DC=com,DC=br'
+# your Search base
+
+SEARCH_BASE_USER='CN=Users,${SEARCH_BASE}'
+# your Search base user
+
+SEARCH_BASE_GROUP='CN=Groups,${SEARCH_BASE}'
+# your Search base group
+
+GROUP_REQUIRED='CN=Turma da Monica,${SEARCH_BASE_USER}'
+# your DN group with the user MUST be in to login
+
+GROUP_DENIED='CN=Disabled,${SEARCH_BASE_GROUP}'
+# your DN group with the user NOT may be in to login
 ```
 
 ### Connection to Active Directory
 
 ```sh
-python test-active-directory.py
+python utils/test-active-directory.py
 ```
 
 #### Output example
 ```
 # Retrieve the configuration parameters:
-# Connect with AD_DOMAIN - tiozaodolinux.com at AD_SERVER - ldaps://dc01.tiozaodolinux.com with Administrator@tiozaodolinux.com
+# Connect with DOMAIN - tiozaodolinux.com at SERVER - ldaps://dc01.tiozaodolinux.com with Administrator@tiozaodolinux.com
 # Find user by name="tiozao"
 # Display user info
 ================================================================================
