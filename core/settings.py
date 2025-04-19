@@ -1,18 +1,20 @@
 from pathlib import Path
-from .config import ENV
+from dotenv import load_dotenv
+from decouple import config, Csv
+load_dotenv()
 
 # Basedir
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = ENV['SECRET_KEY']
+SECRET_KEY= config('SECRET_KEY',default='your-secret-key-here')
 
-DEBUG = ENV['DEBUG']
+DEBUG = config('DEBUG',default=False, cast=bool)
 
-ALLOWED_HOSTS = ENV['ALLOWED_HOSTS']
+ALLOWED_HOSTS= config('ALLOWED_HOSTS', default=['*'], cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = ENV['CSRF_TRUSTED_ORIGINS']
+CSRF_TRUSTED_ORIGINS= config('CSRF_TRUSTED_ORIGINS', default=['https://'], cast=Csv())
 
-TIME_ZONE = ENV['TIME_ZONE']
+TIME_ZONE= config('TIME_ZONE',default='America/Campo_Grande')
 
 # Application definition
 INSTALLED_APPS = [
@@ -66,19 +68,37 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
+from django.conf import os
 # Database definition
-if ENV['DATABASE_URL']:
-    DATABASES = {
-        'default': ENV['DATABASE_URL']
-    }
-else:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('DATABASE_NAME', 'polls'),
+            'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
+            'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
+            'PORT': os.getenv('DATABASE_PORT', 5432), 
+        }
+}    
+# if ENV['DATABASE_URL']:
+#     DATABASES = {
+#         'default': ENV['DATABASE_URL']
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
 
 
 # Password validation
@@ -104,12 +124,18 @@ LOCALE_PATHS = [ BASE_DIR / 'locale', ]
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATIC_DIR = [ BASE_DIR / 'static', ]
+STATIC_DIR = BASE_DIR / 'static'
 STATICFILES_DIRS = [ BASE_DIR / 'static', ]
 
 # Media
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# print(f'######## BASE_DIR: {BASE_DIR}')
+# print(f'######## STATIC_DIR: {STATIC_DIR}')
+# print(f'######## STATIC_URL: {STATIC_URL}')
+# print(f'######## MEDIA_ROOT: {MEDIA_ROOT}')
+# print(f'######## MEDIA_URL: {MEDIA_URL}')
 
 # Crispy
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

@@ -1,7 +1,8 @@
 """
 This module facilitates interaction with AD using ms_active_directory
 """
-from core.config import ENV
+from directory.config import *
+
 from ms_active_directory import ADDomain, ADUser, ADGroup, ADObject
 # from django.contrib import messages
 from typing import List
@@ -42,14 +43,14 @@ def print_object(object):
 class ConnectActiveDirectory:
     def __init__(self):
 
-        self.domain = ENV['AD_DOMAIN']
-        self.server = ENV['AD_SERVER']
-        self.user = ENV['AD_ADMIN_USER']
-        self.password = ENV['AD_ADMIN_PASSWORD']
-        self.user_attrs = ENV['AD_USER_ATTRS']
-        self.group_attrs = ENV['AD_GROUP_ATTRS']
-        self.group_required = ENV['AD_GROUP_REQUIRED']
-        self.group_denied = ENV['AD_GROUP_DENIED']
+        self.domain = DOMAIN
+        self.server = SERVER
+        self.user = ADMIN_USER
+        self.password = ADMIN_PASSWORD
+        self.user_attrs = USER_ATTRS
+        self.group_attrs = GROUP_ATTRS
+        self.group_required = GROUP_REQUIRED
+        self.group_denied = GROUP_DENIED
 
         self.ad_domain = None
         self.ad_session = None
@@ -244,3 +245,10 @@ class ConnectActiveDirectory:
         logger.info(f'# Login ({filter}) successful')
 
         return session
+
+def update_user(self, username, attrs: dict):
+    pass
+    # user = self.get_user(filter=username)
+    # if not user:
+    #     return False
+    # return user.modify(attrs)

@@ -6,17 +6,7 @@ logger = logging.getLogger(__name__)
 
 # from ms_active_directory import ADDomain
 
-from core.config import ENV
-
-# Minimal configuration for Active Directory
-AD_DOMAIN = ENV['AD_DOMAIN']
-AD_SERVER = ENV['AD_SERVER']
-AD_ADMIN_USER = ENV['AD_ADMIN_USER']
-AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
-AD_GROUP_REQUIRED = ENV['AD_GROUP_REQUIRED']
-AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
-AD_USER_ATTRS = ENV['AD_USER_ATTRS']
-AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
+from directory.config import *
 
 from directory.simple_ad import ConnectActiveDirectory  #, print_object
 
@@ -63,18 +53,18 @@ class ActiveDirectoryBackend(BaseBackend):
         mail = user_ad.get('mail')
 
         # Find required group by distinctiveName
-        group_required = con.get_group_by_dn(filter=AD_GROUP_REQUIRED)
+        group_required = con.get_group_by_dn(filter=GROUP_REQUIRED)
         if not group_required:
-            logger.critical(f'## Required Group "{AD_GROUP_REQUIRED}" NOT found')
+            logger.critical(f'## Required Group "{GROUP_REQUIRED}" NOT found')
             dn_requiered_group = None
             return None
         else:
             dn_requiered_group = group_required.distinguished_name
 
         # Find denied group by distinctiveName
-        group_denied = con.get_group_by_dn(filter=AD_GROUP_DENIED)
+        group_denied = con.get_group_by_dn(filter=GROUP_DENIED)
         if not group_denied:
-            logger.warning(f'## Denied Group "{AD_GROUP_DENIED}" NOT found')
+            logger.warning(f'## Denied Group "{GROUP_DENIED}" NOT found')
             dn_denied_group = None
         else:
             dn_denied_group = group_denied.distinguished_name
@@ -83,7 +73,7 @@ class ActiveDirectoryBackend(BaseBackend):
         if all_groups:
             if dn_denied_group:
                 if dn_denied_group in all_groups:
-                    logger.warning(f'## User Denied: "{username}" is a member of "{AD_GROUP_DENIED}"')
+                    logger.warning(f'## User Denied: "{username}" is a member of "{GROUP_DENIED}"')
                     return None
             elif dn_requiered_group in all_groups:
                 user_session = con.login(userPrincipalName, password)
@@ -108,7 +98,7 @@ class ActiveDirectoryBackend(BaseBackend):
 
                 return user
             else:
-                logger.warning(f'## User "{username}" NOT a member of "{AD_GROUP_REQUIRED}"')
+                logger.warning(f'## User "{username}" NOT a member of "{GROUP_REQUIRED}"')
                 return None
         else:
             logger.warning(f'## User "{username}" NOT a member of any group')

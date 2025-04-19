@@ -5,6 +5,7 @@
 <div class="container mt-3">
     <h1>{% trans 'User Detail' %}</h1>
 
+    <form action="" method="POST">{% csrf_token %}
     <div class="card">
 
         <div class="card-header text-bg-warning text-center">
@@ -264,9 +265,11 @@
 
     </div>
     <div class="container m-3 text-center">
-        <input type="submit" class="btn btn-success" value="Save">
-        <input type="submit" class="btn btn-warning" value="Cancel">
+        <input type="button" class="btn btn-success" value="Save">
+        <input type="reset" class="btn btn-warning" value="Reset">
+        <input type="button" class="btn btn-danger" value="Cancel">
     </div>
+    </form>
 </div>
 <script>
     function move(origemId, destinoId) {

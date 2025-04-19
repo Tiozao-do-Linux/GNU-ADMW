@@ -1,29 +1,14 @@
-# from django.conf import settings
-from core.settings import ENV
+from directory.config import *
 
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required, login_not_required
 
-
 from django.contrib import messages
-from django.utils import timezone
 from directory.simple_ad import ConnectActiveDirectory, userAccountControl_is_enabled, extract_ou
-
-env_context = {
-    'ad_domain' : ENV['AD_DOMAIN'],
-    'ad_server' : ENV['AD_SERVER'],
-    'ad_admin_user' : ENV['AD_ADMIN_USER'],
-    'ad_user_attrs' : ENV['AD_USER_ATTRS'],
-    'ad_group_attrs' : ENV['AD_GROUP_ATTRS'],
-    'ad_base' : ENV['AD_BASE'],
-    'ad_base_user' : ENV['AD_BASE_USER'],
-    'ad_base_group' : ENV['AD_BASE_GROUP'],
-    'ad_group_required' : ENV['AD_GROUP_REQUIRED'],
-    'ad_group_denied' : ENV['AD_GROUP_DENIED'],
-    'now' : timezone.now(),
-}
 
 ## Template Views
 #################
@@ -127,7 +112,7 @@ class OrganizationListView(ListView):
 ## Details Views
 ################
 
-class UserDetailView(DetailView):
+class UserDetailView(LoginRequiredMixin, DetailView):
     template_name = 'users/detail.html'
 
     def get_object(self, queryset=None):
@@ -141,3 +126,55 @@ class UserDetailView(DetailView):
         if not users: return None
 
         return users.all_attributes
+
+## Details/Update Views
+################
+
+from django.views import View
+from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest
+class UserDetailUpdateView(DetailView):
+    template_name = 'users/detail.html'
+    def get(self, request, *args, **kwargs):
+        filter = self.kwargs.get('username')
+
+        con = ConnectActiveDirectory()
+        if not con.ad_session:
+            return redirect('error_page')
+
+        users = con.get_user(filter=filter, attrs=['*'])
+        if not users:
+            return HttpResponseBadRequest('User not found.')
+
+        user_attrs = users.all_attributes
+        return render(request, self.template_name, {'object': user_attrs})
+
+    def post(self, request, *args, **kwargs):
+        username = self.kwargs.get('username')
+
+        # Get data from form
+        displayName = request.POST.get('displayName')
+        telephoneNumber = request.POST.get('telephoneNumber')
+        mail = request.POST.get('mail')
+
+        print(f'POST: username= {username} - displayName= {displayName} - telephoneNumber= {telephoneNumber} - mail= {mail}')
+
+        con = ConnectActiveDirectory()
+        if not con.ad_session:
+            return redirect('error_page')
+
+        # updated = con.ad_session.disable_account(username)
+        # if not updated:
+        #     return HttpResponseBadRequest('Error on disable.')
+
+        # updated = con.update_user(username, {
+        #     'displayName': displayName,
+        #     'telephoneNumber': telephoneNumber,
+        #     'mail': mail
+        # })
+
+        # if not updated:
+        #     return HttpResponseBadRequest('Error on update.')
+
+        return redirect('user_detail', username=username)
+

@@ -1,11 +1,5 @@
-from core.config import ENV
+from directory.config import *
 from directory.simple_ad import ConnectActiveDirectory, print_object
-
-AD_ADMIN_PASSWORD = ENV['AD_ADMIN_PASSWORD']
-AD_GROUP_REQUIRED = ENV['AD_GROUP_REQUIRED']
-AD_GROUP_DENIED = ENV['AD_GROUP_DENIED']
-AD_USER_ATTRS = ENV['AD_USER_ATTRS'] 
-AD_GROUP_ATTRS = ENV['AD_GROUP_ATTRS']
 
 print(f'##############################################')
 con = ConnectActiveDirectory()
@@ -22,18 +16,18 @@ if con.ad_session: print(con)
 
 
 print(f'##############################################')
-Filter_Group_DN=AD_GROUP_REQUIRED
-group = con.get_group_by_dn(filter=Filter_Group_DN)
+Filter_Group=GROUP_REQUIRED
+group = con.get_group_by_dn(filter=Filter_Group)
 if not group:
-    print(f'## Required Group: "{Filter_Group_DN}" NOT found')
+    print(f'## Required Group: "{Filter_Group}" NOT found')
 else:
     print_object(group)
 
 print(f'##############################################')
-Filter_Group_DN=AD_GROUP_DENIED
-group = con.get_group_by_dn(filter=Filter_Group_DN)
+Filter_Group=GROUP_DENIED
+group = con.get_group_by_dn(filter=Filter_Group)
 if not group:
-    print(f'## Denied Group: "{Filter_Group_DN}" NOT found')
+    print(f'## Denied Group: "{Filter_Group}" NOT found')
 else:
     print_object(group)
 
@@ -53,7 +47,7 @@ else:
 
     print(f'##############################################')
     Filter_User=userPrincipalName
-    user_session = con.login(filter=Filter_User, password=AD_ADMIN_PASSWORD)
+    user_session = con.login(filter=Filter_User, password=ADMIN_PASSWORD)
     if user_session:
         print(f'## Login ({Filter_User}) Successfully ')
     else:
