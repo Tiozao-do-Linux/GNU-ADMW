@@ -7,7 +7,7 @@
 		<hr>
   	</div>
 
-    <div class="container">
+    <div class="container mb-3">
         <form method="post">{% csrf_token %}
             {{ form|crispy }}
             <button class="btn btn-primary ms-2" type="submit">Sign Up</button>
