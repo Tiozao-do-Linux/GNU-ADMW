@@ -102,45 +102,46 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.pwdLastSet }}</td>
                         {% if user.status %}
-                            <td>Active</td>
+                            <td class="table-success">Enabled</td>
                         {% else %}
                             <td class="table-danger">Disabled</td>
                         {% endif %}
-
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'user_detail' user.username %}" class="btn btn-sm btn-primary">Edit</a>
                                 <a href="#{ % url 'password_reset' user.username %}" class="btn btn-sm btn-warning">Reset Password</a>
                                 {% if user.status %}
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#disableModal{{ user.username }}">Disable</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#toggleModal{{ user.username }}">Disable</button>
                                 {% else %}
-                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#enableModal{{ user.username }}">Enable</button>
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#toggleModal{{ user.username }}">Enable</button>
                                 {% endif %}
                             </div>
                         </td>
                     </tr>
-                    <!-- Disable Modal -->
-                    <div class="modal fade" id="disableModal{{ user.username }}" data-bs-backdrop="static">
+                    <!-- Toogle Modal -->
+                    <div class="modal fade" id="toggleModal{{ user.username }}" data-bs-backdrop="static">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                           <div class="modal-content">
                             <!-- Modal Header -->
                             <div class="modal-header">
-                              <h1 class="modal-title">Confirm Disable</h1>
+                                <h1 class="modal-title">Confirm
+                                    {% if user.status %}Disable{% else %}Enable{% endif %}
+                                </h1>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <!-- Modal body -->
                             <div class="modal-body">
-                              <p>Are you sure you want to disable user <b class="text-danger">{{ user.username }}</b>?</p>
-                              <h4 class="text-success">Not implemented yet</h4>
+                              <h1 class="modal-title">User <b class="text-danger">{{ user.username }}</b> ?</h1>
                             </div>
                             <!-- Modal footer -->
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                              <form action="#{ % url 'user_delete' user.username %}" method="post" class="d-inline">
+                              <a href="{% url 'user_toggle' user.username %}" class="btn btn-danger">Confirm</a>
+                              <!-- <form action="{% url 'user_toggle' user.username %}" method="post" class="d-inline">
                                 {% csrf_token %}
-                                <button type="button" class="btn btn-primary">Disable</button>
-                                <!-- <button type="submit" class="btn btn-danger">Disable</button> -->
-                              </form>
+                                <button type="button" class="btn btn-danger">Confirm</button>
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                              </form> -->
                             </div>
                           </div>
                         </div>

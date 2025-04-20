@@ -89,7 +89,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label for="telephoneNumber" class="form-label">Telefone Number:</label>
+                                    <label for="telephoneNumber" class="form-label">Telephone Number:</label>
                                     <input type="text" class="form-control" id="telephoneNumber" name="telephoneNumber" value="{{ object.telephoneNumber }}">
                                 </div>
                             </div>
@@ -265,9 +265,8 @@
 
     </div>
     <div class="container m-3 text-center">
-        <input type="button" class="btn btn-success" value="Save">
-        <input type="reset" class="btn btn-warning" value="Reset">
-        <input type="button" class="btn btn-danger" value="Cancel">
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'user_list' %}" class="btn btn-warning">Cancel</a>
     </div>
     </form>
 </div>

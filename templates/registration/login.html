@@ -1,14 +1,11 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
-{% load i18n %}
-
-{% block subtitle %} - {% trans 'Login Page' %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}{% load static %}{% load crispy_forms_tags %}
+{% block subtitle %} - {% trans 'Login' %}{% endblock %}
 
 {% block content %}
 	<div class="container mt-3">
-		<h1 class="display-6">{% trans 'Login Page' %}</h1>
+        <h1>{% trans 'Login' %}</h1>
 		<hr>
-	</div>
+  	</div>
 
 	<div class="container">
 		<div class="row justify-content-center">
