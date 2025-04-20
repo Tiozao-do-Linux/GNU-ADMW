@@ -4,7 +4,7 @@ This module facilitates interaction with AD using ms_active_directory
 from directory.config import *
 
 from ms_active_directory import ADDomain, ADUser, ADGroup, ADObject
-# from django.contrib import messages
+
 from typing import List
 import logging
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def userAccountControl_is_enabled(uAC: int) -> bool:
 
 def extract_ou(dn: str) -> str:
     """
-      Returns where the user is in the structure
+    Returns where the user is in the structure
     """
     parts = dn.split(',')
     parts.pop(0)    # remove first element
@@ -30,6 +30,9 @@ def extract_ou(dn: str) -> str:
 
 
 def print_object(object):
+    """
+    Print object attributes like ldif format
+    """
     if object:
         object = vars(object)
         distinguishedName = object['distinguished_name']
@@ -39,6 +42,16 @@ def print_object(object):
         print(json.dumps(dict(object['all_attributes']), ensure_ascii=False, indent=3))
         print(f'-'*80)
 
+from django.http import QueryDict
+def clean_post_data(post_data: QueryDict):
+    """
+    Removes unwanted fields like csrf_token and empty values from POST and returns a clean dict.
+    """
+    exclude_fields = ['csrfmiddlewaretoken']
+    return {
+        k: v for k, v in post_data.items()
+        if k not in exclude_fields and v.strip() != ''
+    }
 
 class ConnectActiveDirectory:
     def __init__(self):
@@ -107,6 +120,28 @@ class ConnectActiveDirectory:
 
         return user
 
+    """
+    Update user.
+      filter is the samAccountName
+      update_attrs is a dictionary of attributes to update.
+      return true on success
+    """
+    def update_user(self,
+                        filter : str = None,
+                        base : str = None,
+                        update_attrs: dict = None):
+
+        # keys = update_attrs.keys()
+        # user = self.get_user(filter=filter, attrs=keys)
+        # print(f'## update_user({filter}, {update_attrs})')
+
+        success = self.ad_session.overwrite_attributes_for_user(filter, update_attrs, raise_exception_on_failure=False)
+        if success:
+            logger.info(f'# User ({filter}) updated')
+        else:
+            logger.critical(f'# User ({filter}) NOT updated')
+        
+        return success
 
     def get_users(self,
                           filter : str = None,
@@ -245,10 +280,3 @@ class ConnectActiveDirectory:
         logger.info(f'# Login ({filter}) successful')
 
         return session
-
-def update_user(self, username, attrs: dict):
-    pass
-    # user = self.get_user(filter=username)
-    # if not user:
-    #     return False
-    # return user.modify(attrs)

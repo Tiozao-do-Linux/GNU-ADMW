@@ -1,14 +1,16 @@
 from directory.config import *
+from django.shortcuts import render, redirect
 
 from django.urls import reverse_lazy
+# from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
+# from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required, login_not_required
+# from django.contrib.auth.decorators import login_required, permission_required, login_not_required
 
 from django.contrib import messages
-from directory.simple_ad import ConnectActiveDirectory, userAccountControl_is_enabled, extract_ou
+from directory.simple_ad import ConnectActiveDirectory, userAccountControl_is_enabled, extract_ou, clean_post_data
 
 ## Template Views
 #################
@@ -41,7 +43,6 @@ class LogoffView(TemplateView):
 # User Management Views
 class UserListView(ListView):
     template_name = 'users/list.html'
-
 
     def get_queryset(self):
         
@@ -90,6 +91,13 @@ class UserListView(ListView):
         
         return user_list
 
+class UserToggleView(ListView):
+    template_name = 'users/list.html'
+    def get_queryset(self):
+        filter = self.request.GET.get('filter')
+        username = self.kwargs.get('username')
+        messages.warning(self.request, f"Inside UserToggleView. Username: {username}")
+        # return redirect('user_list')
 
 class GroupListView(ListView):
     template_name = 'groups/list.html'
@@ -109,6 +117,7 @@ class OrganizationListView(ListView):
     def get_queryset(self):
         pass
 
+
 ## Details Views
 ################
 
@@ -127,25 +136,27 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
         return users.all_attributes
 
+
 ## Details/Update Views
 ################
 
-from django.views import View
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest
-class UserDetailUpdateView(DetailView):
+class UserUpdateView(DetailView):
     template_name = 'users/detail.html'
+
     def get(self, request, *args, **kwargs):
-        filter = self.kwargs.get('username')
+        username = self.kwargs.get('username')
 
         con = ConnectActiveDirectory()
         if not con.ad_session:
             return redirect('error_page')
 
-        users = con.get_user(filter=filter, attrs=['*'])
+        users = con.get_user(filter=username, attrs=['*'])
         if not users:
             return HttpResponseBadRequest('User not found.')
 
+        # return users.all_attributes
         user_attrs = users.all_attributes
         return render(request, self.template_name, {'object': user_attrs})
 
@@ -153,26 +164,21 @@ class UserDetailUpdateView(DetailView):
         username = self.kwargs.get('username')
 
         # Get data from form
-        displayName = request.POST.get('displayName')
-        telephoneNumber = request.POST.get('telephoneNumber')
-        mail = request.POST.get('mail')
-
-        print(f'POST: username= {username} - displayName= {displayName} - telephoneNumber= {telephoneNumber} - mail= {mail}')
+        new_values = clean_post_data(request.POST)
 
         con = ConnectActiveDirectory()
         if not con.ad_session:
             return redirect('error_page')
+        
+        updated = con.update_user(filter=username, update_attrs=new_values)
+        if not updated:
+            messages.warning(self.request, f"Username: {username} NOT updated.")
+        else:
+            messages.success(self.request, f"Username: {username} updated sucessfully.")
 
         # updated = con.ad_session.disable_account(username)
         # if not updated:
         #     return HttpResponseBadRequest('Error on disable.')
-
-        # updated = con.update_user(username, {
-        #     'displayName': displayName,
-        #     'telephoneNumber': telephoneNumber,
-        #     'mail': mail
-        # })
-
         # if not updated:
         #     return HttpResponseBadRequest('Error on update.')
 
