@@ -95,7 +95,7 @@ class SimpleMiddleware:
         pass
 
     def process_template_response(self, request, response):
-        # Code to be executed for each template response
+        # This method is called just after the view has finished executing
         end_time = time.time()
         response.context_data['website'] = self.website
         response.context_data['render_time'] = end_time - getattr(request, '_start_time', end_time)
