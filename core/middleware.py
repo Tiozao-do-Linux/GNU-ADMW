@@ -36,8 +36,7 @@ class SimpleMiddleware:
         print(f'Initialized SimpleMiddleware')
 
     def __call__(self, request):
-        # Code to be executed for each request before
-        # the view (and later middleware) are called.
+        # Code to be executed for each request before the view
         start_time = time.time()
         request._start_time = start_time
 
@@ -75,14 +74,14 @@ class SimpleMiddleware:
 
         response = self.get_response(request)
 
-        # Code to be executed for each request/response after
-        # the view is called.
+        # Code to be executed for each request/response after the view is called.
         end_time = time.time()
         load_time = end_time - start_time
         print(f'Page Loaded in {load_time:.4f} seconds')
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
+        # Code to be executed for each request before the view
         start_time = time.time()
         response = view_func(request, *view_args, **view_kwargs)
         end_time = time.time()
@@ -91,9 +90,12 @@ class SimpleMiddleware:
         return response
 
     def process_exception(self, request, exception):
+        # Code to be executed for each exception raised while processing a request
+        print(f'Exception: {exception}')
         pass
 
     def process_template_response(self, request, response):
+        # Code to be executed for each template response
         end_time = time.time()
         response.context_data['website'] = self.website
         response.context_data['render_time'] = end_time - getattr(request, '_start_time', end_time)
@@ -103,6 +105,7 @@ class SimpleMiddleware:
         return response
 
     def process_response(self, request, response):
+        # Code to be executed for each response
         end_time = time.time()
         print(f'Ended time: {end_time}')
         render_time = end_time - self._start_time
