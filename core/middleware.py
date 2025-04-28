@@ -74,6 +74,7 @@ class SimpleMiddleware:
 
         print(f'SimpleMiddleware - __call__::Before:: ')
 
+        # Call the view
         response = self.get_response(request)
 
         # Code to be executed for each request/response after the view is called.
