@@ -37,15 +37,16 @@ class SimpleMiddleware:
 
     def __call__(self, request):
         # Code to be executed for each request before the view (and later middleware) are called.
+        # ⏱️ Time before the view
         start_time = time.time()
         request._start_time = start_time
 
-        # Detect browser, version and OS
+        # 🕵️ Detect browser, version and OS
         user_agent_str = request.META.get('HTTP_USER_AGENT', '')
         user_agent = parse(user_agent_str)
         request._browser_info = f"{user_agent.browser.family} / {user_agent.browser.version_string} / {user_agent.os.family} /"
 
-        # Collect IPs and separate by type
+        # 🌐 Collect IPs and separate by type
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
         ip_list = []
@@ -100,6 +101,7 @@ class SimpleMiddleware:
     def process_template_response(self, request, response):
         # Logic executed after the view is called, # ONLY IF view response is TemplateResponse, see listing 2-24 
         end_time = time.time()
+        # Inject data into the response
         response.context_data['website'] = self.website
         response.context_data['render_time'] = end_time - getattr(request, '_start_time', end_time)
         response.context_data['browser_info'] = getattr(request, '_browser_info', 'Unknow')

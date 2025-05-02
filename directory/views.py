@@ -1,10 +1,11 @@
 from directory.config import *
 from django.shortcuts import render, redirect
 
+from django.views.generic import View, TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-# from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView
-# from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.decorators import login_required, permission_required, login_not_required
@@ -142,8 +143,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest
-class UserUpdateView(DetailView):
+class UserUpdateView(UpdateView):
     template_name = 'users/detail.html'
+    success_url = reverse_lazy('user_detail')
 
     def get(self, request, *args, **kwargs):
         username = self.kwargs.get('username')
@@ -156,9 +158,9 @@ class UserUpdateView(DetailView):
         if not users:
             return HttpResponseBadRequest('User not found.')
 
-        # return users.all_attributes
-        user_attrs = users.all_attributes
-        return render(request, self.template_name, {'object': user_attrs})
+        # Create context
+        context = {'object': users.all_attributes}
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         username = self.kwargs.get('username')
@@ -170,11 +172,14 @@ class UserUpdateView(DetailView):
         if not con.ad_session:
             return redirect('error_page')
         
-        updated = con.update_user(filter=username, update_attrs=new_values)
+        updated, updated_attrs = con.update_user(filter=username, update_attrs=new_values)
         if not updated:
-            messages.warning(self.request, f"Username: {username} NOT updated.")
+            messages.warning(self.request, f"Username: {username} NOT updated")
         else:
-            messages.success(self.request, f"Username: {username} updated sucessfully.")
+            messages.success(self.request, f"Username: {username} updated sucessfully.\nUpdated attrs: {updated_attrs}")
+
+        # messages.warning(self.request, f"Updated attrs: {updated_attrs}")
+
 
         # updated = con.ad_session.disable_account(username)
         # if not updated:

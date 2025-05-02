@@ -50,7 +50,7 @@ def clean_post_data(post_data: QueryDict):
     exclude_fields = ['csrfmiddlewaretoken']
     return {
         k: v for k, v in post_data.items()
-        if k not in exclude_fields and v.strip() != ''
+        if k not in exclude_fields #and v.strip() != ''
     }
 
 class ConnectActiveDirectory:
@@ -124,24 +124,54 @@ class ConnectActiveDirectory:
     Update user.
       filter is the samAccountName
       update_attrs is a dictionary of attributes to update.
-      return true on success
+      return true on success and the updated attributes
     """
     def update_user(self,
                         filter : str = None,
                         base : str = None,
                         update_attrs: dict = None):
 
-        # keys = update_attrs.keys()
-        # user = self.get_user(filter=filter, attrs=keys)
-        # print(f'## update_user({filter}, {update_attrs})')
+        # get only name of attrs of update_attrs to be updated instead of all ('*')
+        attrs = update_attrs.keys()
 
-        success = self.ad_session.overwrite_attributes_for_user(filter, update_attrs, raise_exception_on_failure=False)
+        user = self.get_user(filter=filter, base=base, attrs=attrs)
+        if not user:
+            return [False, {}]
+
+        # Get current values
+        current_attrs = user.all_attributes
+
+        modifications = {}
+        for attr, new_value in update_attrs.items():
+            current_value = current_attrs.get(attr)
+
+            # Normalize values (ldap3 sometimes returns lists)
+            if isinstance(current_value, list):
+                current_value = current_value[0] if current_value else ''
+
+            # Ignore same values
+            if (current_value or '') == (new_value or ''):
+                continue
+
+            if new_value == '':
+                # Erase if new_value is empty
+                modifications[attr] = [] #'[(MODIFY_DELETE, [])]'
+            else:
+                # Replace
+                modifications[attr] =  new_value #'[(MODIFY_REPLACE, [{new_value}])]'
+
+        if not modifications:
+            return [False, {}] # Nothing to do
+
+        # print(f'## update_user ## ({filter}, {modifications})')
+
+        success = self.ad_session.overwrite_attributes_for_user(filter, modifications, raise_exception_on_failure=False)
         if success:
-            logger.info(f'# User ({filter}) updated')
+            logger.info(f'# User ({filter}) updated. {modifications}')
         else:
-            logger.critical(f'# User ({filter}) NOT updated')
+            logger.critical(f'# User ({filter}) NOT updated. {modifications}')
         
-        return success
+        return [success, modifications]
 
     def get_users(self,
                           filter : str = None,
