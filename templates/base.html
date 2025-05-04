@@ -23,10 +23,12 @@
 
     <!-- Info -->
     <div class="container-fluid text-center text-bg-light small">
-        Now : <strong>{% now "Y-m-d G:i:s" %}</strong> |
-        Browser: <strong>{{ browser_info }}</strong> |
-        Your IP: <strong>{{ remote_ip }}</strong> |
-        Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
+        Now : <strong>{% now "Y-m-d G:i:s" %}</strong> 
+        {% if browser_info %}
+          | Browser: <strong>{{ browser_info }}</strong> |
+          Your IP: <strong>{{ remote_ip }}</strong> |
+          Render Time: <strong>{{ render_time|floatformat:4 }}</strong> seconds
+        {% endif %}
     </div>
     
     <main class="border border-success shadow-lg bg-white rounded-3 m-3 mb-5">

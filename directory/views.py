@@ -45,6 +45,8 @@ class LogoffView(TemplateView):
 class UserListView(ListView):
     template_name = 'users/list.html'
 
+    link = 'https://reinout.vanrees.org/weblog/2014/05/19/context.html'
+
     def get_queryset(self):
         
         filter = self.request.GET.get('filter')
