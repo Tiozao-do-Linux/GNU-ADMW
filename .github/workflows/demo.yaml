@@ -22,7 +22,7 @@ jobs:
 
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
-      - run: echo "The repository name is $GITHUB_ACTION_REPOSITORY"
+      - run: echo "The repository name is $GITHUB_REPOSITORY"
       
       - run: echo "variables $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
