@@ -22,6 +22,8 @@ jobs:
 
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
+      - run: echo "The repository name is {{ $GITHUB_ACTION_REPOSITORY }}"
+
       - name: Check out repository code
         uses: actions/checkout@v4
       
