@@ -40,5 +40,10 @@ jobs:
       - name: List files in the repository
         run: |
           ls -la ${{ github.workspace }}
+
+      - name: Show docker version and docker info
+        run: |
+          docker version
+          docker info
       
       - run: echo "🍏 This job's status is ${{ job.status }}."
