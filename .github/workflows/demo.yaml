@@ -45,6 +45,7 @@ jobs:
         run: |
           docker version
           docker info
-          docker compose config
+          docker compose version
+          docker compose ps
       
       - run: echo "🍏 This job's status is ${{ job.status }}."
