@@ -41,10 +41,11 @@ jobs:
         run: |
           ls -la ${{ github.workspace }}
 
-      - name: Show docker version, docker info, docker compose version
+      - name: Show docker version/info/images, docker compose version
         run: |
           docker version
           docker info
+          docker images
           docker compose version
       
       - run: echo "🍏 This job's status is ${{ job.status }}."
