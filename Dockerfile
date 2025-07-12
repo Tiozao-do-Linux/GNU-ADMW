@@ -2,9 +2,6 @@
 
 # Use the official Python runtime image
 FROM python:3.13-slim
-
-# Set the working directory inside the container
-WORKDIR /app
  
 # Set environment variables 
 # Prevents Python from writing pyc files to disk
@@ -14,9 +11,12 @@ ENV PYTHONUNBUFFERED=1
  
 # Upgrade pip
 RUN pip install --upgrade pip 
+
+# Set the working directory inside the container
+WORKDIR /app
  
-# Copy the Django project  and install dependencies
-COPY requirements.txt  /app/
+# Copy the Django project and install dependencies
+COPY requirements.txt .
  
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r requirements.txt
